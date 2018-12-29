@@ -1,3 +1,3 @@
 <?php
 
-phpinfo();
+echo "Web2Net -> Yurk_in";

@@ -1,0 +1,20 @@
+<div class="wrap_catalog_sell view_<?=$_SESSION['grid_list']?> r20">
+<?//////////// butt_print ///////////////?>
+    <div style="padding:2px;position:absolute;">
+        <a href="<?=$a_print?>" target="_blank">
+            <img src="<?=PATH_IMG?>/ico_print.png" style="width:30px;" title="print" alt="print" />
+        </a>
+    </div>
+<?//////////// /butt_print ///////////////?>
+<div class="catalog_sell" style="padding-top:30px;">
+<div style="margin-bottom:-25px;position:relative;z-index:2;"><span class="<?=$wr_pr?> r5"><?=$pr?></a></div>
+        <a href="<?=$a_href?>" <?=$fancy?> title="<?=$caption?>">
+            <img  class="img_prew r20" src="<?=$img1?>" />
+            
+            <div class="caption6" style="padding:0px;"><?=$caption;?></div>
+			<div style="padding:0px;font-size:10px;"><?=$kod;?></div>
+	    </a>		
+        
+		<?include SITE_PATH."/site/shop/tpl/price_and_buttonBuy_list.php";?>	
+    </div>
+</div>

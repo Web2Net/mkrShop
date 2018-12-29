@@ -1,0 +1,152 @@
+<style>
+    .right{
+	    float:right;
+	}
+	.left{
+	    float:left;
+	}
+	.both{
+	    clear:both;
+	}
+
+    .wrap_works_filter_butt{
+	    padding:5px;
+	}
+	.works_filter_butt{
+	    border: 1px solid #000;
+		padding:5px;
+	}
+	
+	.wrap_user_panel{
+	    text-align:center;
+		padding:1px;
+		vertical-align:top;
+	}
+	.user_panel_butt{
+	    border:1px solid #ccc;
+		margin:2px; padding:2px;
+		width:70px; height:65px;
+	}
+</style>
+<table>
+    <tr>
+	    <td>
+		    <a onclick="javascript:history.back();">
+                <img src="design/ico_back.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Назад" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''">
+            </a>
+		</td>
+	    <td>
+		    <a href="javascript:void(0)" onclick="articleForm.submit();">
+                <img src="design/ico_save.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Сохранить" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''">
+            </a>
+		</td>
+	</tr>
+</table>
+<div class="both br_5"></div>
+<?if ($upd=='ok'){?><div class="ok both br_5"><b>Данные обновлены</b></div><?}?>
+
+
+
+<table style="width:100%">
+    <tr>
+	    <td style="padding-left:10px;">
+
+		</td>
+		
+	    <td class="heading1">
+		<span class="right" style="color:#ccc;font-size:28px; align:right;">Закупка № <?=$art_data['id']?></span><br />
+
+		<span class="right" style="color:#ccc;font-size:14px; align:right;"><?=$art_data['date_create']?> :: <?=ucfirst($art_data['author'])?></span>
+	    </td>
+	</tr>
+</table>
+<hr />
+
+<form action="?mod=<?=$mod?>&type=<?=$type?>&com=update<?=isset($id)?"&id=".$id:""?>" method="post" name="articleForm">
+    <input name="form__id" value="<?=$art_data['id']?>" type="hidden">
+<?
+if($art_data['author'] == ""){$author = $_SESSION['user_login'];}
+else{$author = $art_data['author'];}
+?>
+    <input name="form__author" value="<?=$author?>" type="hidden">	
+
+	<table>
+	    <tr style="vertical-align:top;">
+		    <td>
+<?if($_REQUEST['com'] == "edit"){$date = $art_data['date_create'];}else{$date = date("Y-m-d");}?>
+    <fieldset class="pole">
+        <legend>&nbsp;&nbsp;Закупка создается :&nbsp;&nbsp;</legend>
+        <input name="form__date_create" class="adminform" value="<?=$date?>" type="text" />
+    </fieldset>
+	        </td>
+		
+
+
+		</tr>
+	</table>
+
+
+
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Чипы :&nbsp;&nbsp;</legend>
+        <textarea name="form__chip" id="form__chip" style="width:98%;border:1px solid #ccc;" rows="5"><?=$art_data["chip"];?></textarea>
+<!--
+        <script type="text/javascript">
+            CKEDITOR.replace( 'chip',{
+            //    toolbar : 'Basic'
+            //    toolbar : 'Medium'
+                toolbar : 'Default'
+            });
+        </script>
+-->
+    </fieldset>
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Drum :&nbsp;&nbsp;</legend>
+        <textarea name="form__drum" id="form__drum" style="width:98%;border:1px solid #ccc;" rows="5"><?=$art_data["drum"];?></textarea>
+<!--
+        <script type="text/javascript">
+            CKEDITOR.replace( 'drum',{
+                toolbar : 'Basic'
+            //    toolbar : 'Medium'
+            //    toolbar : 'Default'
+            });
+        </script>
+-->		
+    </fieldset>
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Toner :&nbsp;&nbsp;</legend>
+        <textarea name="form__toner" class="adminarea" style="width:98%;border:1px solid #ccc;" rows="5"><?=$art_data['toner']?></textarea>
+    </fieldset>
+
+    <fieldset class="pole">
+        <legend>&nbsp;&nbsp;Cartridge :&nbsp;&nbsp;</legend>
+        <textarea name="form__cartridge" class="adminarea" style="width:98%;border:1px solid #ccc;" rows="5"><?=$art_data['cartridge']?></textarea>
+    </fieldset>
+
+    <fieldset class="pole">
+        <legend>&nbsp;&nbsp;Teflon :&nbsp;&nbsp;</legend>
+        <textarea name="form__teflon" class="adminarea" style="width:98%;border:1px solid #ccc;" rows="5"><?=$art_data['teflon']?></textarea>
+    </fieldset>
+
+    <fieldset class="pole">
+        <legend>&nbsp;&nbsp;Валы :&nbsp;&nbsp;</legend>
+        <textarea name="form__vali" class="adminarea" style="width:98%;border:1px solid #ccc;" rows="5"><?=$art_data['vali']?></textarea>
+    </fieldset>
+
+    <fieldset class="pole">
+        <legend>&nbsp;&nbsp;Прочий ливер :&nbsp;&nbsp;</legend>
+        <textarea name="form__zipa" class="adminarea" style="width:98%;border:1px solid #ccc;" rows="5"><?=$art_data['zipa']?></textarea>
+    </fieldset>
+
+	
+	<input name ="save" type="image" src="design/ico_save.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Сохранить" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''" onclick="articleForm.submit();">
+
+</form>	
+<hr />
+<!-- ************************************************************* -->
+
+	
+

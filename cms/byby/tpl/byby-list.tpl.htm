@@ -1,0 +1,187 @@
+<?
+// Получение данных о клиенте
+$client_data = Works::getClients($art_data['client_id']);
+?>
+
+<div style="border-bottom:1px solid #000;"></div>
+<table style="width: 100%;margin-bottom:3px;" cellpadding="0" cellspacing="0">
+    <tr>
+        <td align="left">
+<?if (isset($category_id)){?>
+            <a onclick="javascript:history.back();"><img src="design/ico_back.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Назад" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''"></a> <?}?>
+            <a href="?mod=<?=$mod?>&com=add"><img src="design/ico_add_artic.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Добавить статью в эту категорию" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''"></a>
+        </td>
+		 
+<!--		
+		<td class="heading1" align="right" valign="bottom">
+        <div style="background-color:#fff;padding:5px"><h3>Поиск по базе</h3>
+        <form action="?mod=works&com=view&type=client" method="get">
+            <input type="hidden" name="mod" value="works"> 
+            <input type="hidden" name="com" value="view"> 
+            <input type="hidden" name="type" value="client"> 
+            <input type="text" name="client"> 
+            <input type="submit" name="client_sumbit" value="    Найти    ">
+        </form>    
+         </div>
+        </td>
+-->		
+<!--		
+        <td class="heading1" align="right" valign="bottom">
+        <div style="background-color:#fff;padding:5px"><h3>Фильтр по дате</h3>
+        <form action="?mod=works&com=view&type=calendar" method="post">
+            <input type="text" name="calendar_date" class="date_input"> 
+            <input type="submit" name="date_sumbit" value="Отфильтровать">
+        </form>    
+    </div>
+        </td>
+-->
+    </tr>
+</table>
+<div class="both br_5"></div>
+
+<?//////////////////////////////////////////////////////////////////////////////////////////////////////////////?>
+
+<form  action="" name="works_massiv" id="works_massiv" method="post" enctype="multipart/form-data" >
+<input type="hidden" id="works_massiv_action" name="works_massiv_action" value="">
+<?if ($listing!=''){
+$c_list = count($listing);
+?>
+
+<div class="both br_5"></div> 
+<?$i=1;?>
+<?foreach($listing as $key=>$art_data){?>
+
+
+<?
+if($art_data['client_id'] !== "0"){
+    $cli_id = $art_data['client_id'];
+	$client_data = Works::getClients($cli_id);
+	$client_name = $client_data['short_caption'];
+}else{
+    $cli_id = "";
+	$client_name = $art_data['client'];
+}
+?>
+
+
+<input style="float:left;" type="checkbox" class="checkbox" name="works_list[]" value="<?=$art_data['id']?>" id="<?=$art_data['id']?>" />
+			<label for="<?=$art_data['id']?>"></label>
+<div title="<?=$art_data['content']?>" class="works_list_caption_<?=$art_data['id']?> r5" style="<?=$bg_zayavki?>;width:98%;cursor:pointer;padding:5px;border:1px solid <?=$bord_col?>;">
+<?
+if($art_data['ingener'] !== "" || $art_data['responsible_ingener']){ 
+	if($art_data['ingener'] == "alex"){$ingener_id = "8";}
+	if($art_data['ingener'] == "rsergey"){$ingener_id = "163";}
+	if($art_data['ingener'] == "ssergey"){$ingener_id = "164";}
+	if($art_data['ingener'] == "web2net"){$ingener_id = "1";}
+	if($art_data['ingener'] == "irina"){$ingener_id = "165";}
+}
+?>
+
+<?
+if($art_data['nal_in']=="N"){
+    $nal_in_img = "nal_n.jpg";$nal_in_alt="Безнал";
+}
+elseif($art_data['nal_in']=="W"){
+    $nal_in_img = "nal_w.jpg";$nal_in_alt="Гарантийный";
+}
+elseif($art_data['nal_in']=="Z"){
+    $nal_in_img = "nal_z.png";$nal_in_alt="Шара прилетела";
+}
+elseif($art_data['nal_in']=="B"){
+    $nal_in_img = "nal_b.png";$nal_in_alt="Бартер";
+}
+elseif($art_data['nal_in']=="S"){
+    $nal_in_img = "nal_s.png";$nal_in_alt="Услуги";
+}
+else{
+    $nal_in_img = "nal_y.jpg";$nal_in_alt="Нал";
+}
+
+if($art_data['nal_out']=="N"){$nal_out_img = "nal_n.jpg";$nal_out_alt="Безнал";}
+else{$nal_out_img = "nal_y.jpg";$nal_out_alt="Нал";}
+?>
+<?		
+$create_in = explode(" ",$art_data['date_in']);
+$create_date_in = $create_in['0'];
+$create_author_in = $create_in['1'];
+
+$create_out = explode(" ",$art_data['date_out']);
+$create_date_out = $create_out['0'];
+$create_author_out = $create_out['1'];
+?>	
+
+	<div style="font-size:14px;font-weight:900;padding:2px;border-bottom:1px solid #fdcfdc;">
+		<span style="float:left;"><?=$art_data['id']?>&nbsp;</span>
+		<span style="float:left;font-size:8px;color:#aaa;"><?=$create_date_in?> :: <?=$create_author_in?></span>
+	    <?=$art_data['caption']?>
+		<span style="float:right;font-size:8px;color:#aaa;"><?=$create_date_out?> :: <?=$create_author_out?></span>
+		
+<?if($art_data['note'] !== ""){?>
+        <img src="<?=PATH_IMG_ADMIN?>/attention.gif" style="width:15px" title="<?=$art_data['note']?>" />
+<?}?>
+    </div>
+	<table>
+		<tr style="vertical-align:center;">
+			<td style="width:2%;padding:1px;">
+				<div><img class="r5" src="/image/user/item/<?=$ingener_id?>/1s.png" style="width:35px;" /></div>
+			</td>
+	        <td style="width:44%;padding:1px;">
+
+				<div style="font-size:12px;padding-left:20px;text-align:left;">
+<?if($_SESSION['user_level'] >= 8){?>					
+				    Покупка : <?=$art_data['sum_in']?><br />
+<?}?>					
+				    Счетчик ОБЩ : <?=$art_data['count_in']?><br />
+					Счетчик Ч/Б : <?=$art_data['count_in_bl']?><br />
+					Счетчик ЦВ : <?=$art_data['count_in_col']?>
+					
+			    </div>
+				<div><img src="<?=PATH_IMG_ADMIN?>/<?=$nal_in_img?>" style="width:25px;padding:5px;" alt="<?=$nal_in_alt?>" title="<?=$nal_in_alt?>" /></div>
+<?if($_SESSION['user_level'] >= 8){?>				
+				<div>
+					<?=$art_data['client_in']?>
+<?if($art_data['client_in_note'] !== ""){?>
+                    <img src="<?=PATH_IMG_ADMIN?>/attention.gif" style="width:15px" title="<?=$art_data['client_in_note']?>" />
+<?}?>				
+				</div>
+<?}?>				
+			</td>
+<?///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////?>			
+			<td style="width:1%;background-color:#eee;"></td>
+			<td style="width:44%;padding:1px;">
+				<div style="font-size:12px;padding-left:20px;text-align:left;">
+<?if($_SESSION['user_level'] >= 8){?>					
+				    Продажа : <?=$art_data['sum_out']?><br />
+<?}?>					
+				    Счетчик ОБЩ : <?=$art_data['count_out']?><br />
+					Счетчик Ч/Б : <?=$art_data['count_out_bl']?><br />
+					Счетчик ЦВ : <?=$art_data['count_out_col']?>
+			    </div>
+				<div><img src="<?=PATH_IMG_ADMIN?>/<?=$nal_out_img?>" style="width:25px;padding:5px;" alt="<?=$nal_out_alt?>" title="<?=$nal_out_alt?>" /></div>
+<?if($_SESSION['user_level'] >= 6){?>				
+				<div>
+					<?=$art_data['client_out']?>
+<?if($art_data['client_out_note'] !== ""){?>
+                    <img src="<?=PATH_IMG_ADMIN?>/attention.gif" style="width:15px" title="<?=$art_data['client_out_note']?>" />
+<?}?>				
+				</div>
+<?}?>				
+				<div style="font-size:12px;padding:2px;"><?=$art_data['predprodazhka']?></div>
+			</td>
+			<td style="width:2%;padding:1px;">
+			    <div>
+					<a href="?mod=<?=$mod?>&type=<?=$type?>&com=edit&tag=<?=$tag?>&id=<?=$art_data['id']?><?if($display!=""){?>&display=<?=$display?><?}?>" title="<?=MANDATORY_EDIT?>">
+                        <img src="<?=PATH_IMG_ADMIN?>/ico_edit_sm.gif" alt="<?=MANDATORY_EDIT?>" vspace="1" border="0" hspace="1" style="margin-bottom:-7px;">
+			        </a>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div class="br_5"></div>
+<?}?>
+
+<?}?>
+
+

@@ -1,0 +1,150 @@
+
+<script>
+//$(document).ready(function(){
+    
+	function showTagZerroList(){
+      $('.tag_list').slideToggle(500);
+    }
+
+//});
+
+</script>
+<style>
+#butt_show_menu{
+    padding:5px;
+    text-align:center;
+    background-color:#d91219;
+    width:125px; height:125px;
+	cursor:pointer;
+	color:#fff;
+	font-weight:900;
+	font-size:125%;
+
+}
+
+.tag_list{
+    display:none;
+    width:275px; height:auto;
+    position:absolute;
+    background-color:#fff;
+	border-bottom:5px solid #ccc;
+	
+}
+.wrap_tag0{
+    
+}
+.tag0{
+    text-align:left;
+	padding:5px;
+	border-left:2px solid #fff;
+	cursor:pointer;
+	height:50px;
+	line-height:50px;
+	vertical-align:center;
+	width:275px;
+}
+.tag0:hover{
+    background-color:#ccc;
+    color:#000;
+	border-left:2px solid #d91219;
+}
+.tag0_img{
+    height:45px;
+}
+
+.tag11{
+    border-left:1px solid #fff;
+	padding-left:5px;
+	display:inline-block;
+	width:350px;height:auto;
+	border:1px solid #ccc;
+	background-repeat:no-repeat;
+	background-position:center center;
+	margin:5px;
+	text-align:center;
+    bottom: 0px;
+	
+} 
+.tag2:hover{
+    background-color:#c9c9c9;
+	border-left:1px solid #d91219;
+	
+}
+
+.tag0:hover .tag1 {
+    display: inline;
+}
+.tag1 {
+    left:275px;
+	width:775px;
+top:0px;
+    padding-left:15px;
+position:absolute;
+z-index:100;
+    background-color:#f7f7f7;
+    display: none;
+    border-bottom:1px solid #000;
+min-height:700px;
+    
+}
+.tag1_img{
+    height:75px;
+}
+</style>
+<table>
+    <tr>
+	    <td id="butt_show_menu" onclick="showTagZerroList();">Все<br />категории</td>
+	    <td style="width:150px;"><a href="/shop/kopirovalnye-apparaty"><img src="/image/shop/tag/1/1.png" style="height:75px;" /><div class="r5" style="line-height:100%;">Копировальные аппараты</div></a></td>
+	    <td style="width:150px;background-image:url('/image/shop/tag/3/1.png');"><a href="/shop/komputery"><div class="r5" style="line-height:100%;">Компьютеры</div></a></td>
+	    <td style="width:150px;background-image:url('/image/shop/tag/9/1.png');"><a href="/shop/noutbuki"><div class="r5" style="line-height:100%;">Ноутбуки</div></a></td>
+	    <td style="width:150px;background-image:url('/image/shop/tag/11/1.png');"><a href="/shop/planshety"><div class="r5" style="line-height:100%;">Планшеты</div></a></td>
+	    <td style="width:150px;background-image:url('/image/shop/tag/17/1.png');"><a href="/shop/mfu"><div class="r5" style="line-height:100%;">МФУ</div></a></td>
+	</tr>
+</table>
+
+
+<?
+if($tag0_list!=NULL){
+?>
+<div class="tag_list show_tag1">
+<?
+    foreach($tag0_list as $key0=>$val0){
+?>
+    <div class="tag0">
+	    <div><img class="tag0_img" src="/image/shop/tag/<?=$val0['id']?>/1.png"><?=$val0['caption']?></div>
+        <div class="tag1">
+<?
+        if($tag1_list!=NULL){
+            foreach($tag1_list as $key1=>$val1){
+			    if($val1["hit"]==$key0){
+?>
+            <div class="tag11 r5" style="background-image:url('/image/shop/tag/<?=$val1['id']?>/1.png');vertical-align:bottom;">
+			    <a href="/shop/<?=$val1["seolink"]?>"><div class="r5" style="line-height:100%;"><?=$val1['caption']?></div></a>
+			
+<?
+$connect_tag=explode(";",substr($val1['connect'], 1, -1));$i2=1;
+if($connect_tag[0]!=''){foreach($connect_tag as $key2=>$child_id){
+$val2=$tag2_list[$child_id];
+?>
+<?if($val2["show"] == "1"){?>
+<div class="tag2">
+    <a style="float: left;font-size:75%;line-height:100%;<?=$GLOBALS['tag2']==$val2["seolink"]?'font-weight:bold;':''?>" href="/shop/<?=$val1["seolink"]?>/<?=$val2["seolink"]?>">
+        <?=$val2["caption"]?>
+	</a><br />
+</div>
+
+<?}?>
+<?}}?>
+</div>			
+			
+<?
+                }
+		    }
+?>      </div>
+    </div>
+<?  
+        }
+    }
+?>
+</div>
+<?}?>

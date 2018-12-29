@@ -1,0 +1,125 @@
+<style>
+    .right{
+	    float:right;
+	}
+	.left{
+	    float:left;
+	}
+	.both{
+	    clear:both;
+	}
+
+    .wrap_works_filter_butt{
+	    padding:5px;
+	}
+	.works_filter_butt{
+	    border: 1px solid #000;
+		padding:5px;
+	}
+	
+	.wrap_user_panel{
+	    text-align:center;
+		padding:1px;
+		vertical-align:top;
+	}
+	.user_panel_butt{
+	    border:1px solid #ccc;
+		margin:2px; padding:2px;
+		width:70px; height:65px;
+	}
+</style>
+<table>
+    <tr>
+	    <td>
+		    <a onclick="javascript:history.back();">
+                <img src="design/ico_back.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Назад" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''">
+            </a>
+		</td>
+	    <td>
+		    <a href="javascript:void(0)" onclick="articleForm.submit();">
+                <img src="design/ico_save.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Сохранить" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''">
+            </a>
+		</td>
+	</tr>
+</table>
+<div class="both br_5"></div>
+<?if ($upd=='ok'){?><div class="ok both br_5"><b>Данные обновлены</b></div><?}?>
+
+<table style="width:100%">
+    <tr>
+	    
+<?		
+$create = explode(" ",$art_data['date_create']);
+$create_date = $create['0'];
+$create_author = $create['1'];
+?>		
+
+	    <td class="heading1">
+		    <span class="right" style="color:#ccc;font-size:28px; align:right;">Напоминалка № <?=$art_data['id']?></span><br />
+            <span class="right" style="color:#ccc;font-size:14px; align:right;"><?=$create_date?> :: <?=ucfirst($create_author)?></span>
+	    </td>
+	</tr>
+</table>
+<hr />
+
+<form action="?mod=<?=$mod?>&type=<?=$type?>&com=update<?=isset($id)?"&id=".$id:""?>" method="post" name="articleForm">
+    <input name="form__id" value="<?=$art_data['id']?>" type="hidden">
+<?
+if($art_data['author'] == ""){$author = $_SESSION['user_login'];}
+else{$author = $art_data['author'];}
+?>
+    <input name="form__author" value="<?=$author?>" type="hidden">	
+
+<?if($_REQUEST['com'] == "edit"){$date = $art_data['date_create'];}else{$date = date("Y-m-d");}?>
+    <fieldset class="pole">
+<?if(isset($art_data['date_create']) && $art_data['date_create'] !== ""){?>		
+		<legend>&nbsp;&nbsp;Напоминание создано :&nbsp;&nbsp;</legend>
+<?}?>
+        <input name="form__date_create" class="adminform" value="<?=$date?>" type="hidden" />
+    </fieldset>
+
+	<fieldset class="pole" style="text-align:left;padding-left:15px;">
+		<center><h2>Возможные получатели</h2>
+		    <div>Отмечаем галочками тех, кому адресовано сообщение/напоминание..<br />Себя выделять не обязательно - скоро доделаю, чтобы не светилась собственная физео..</div>
+		</center>
+        <input type="checkbox" name="poluchatel__8" value="8">&nbsp;Александр Шпак<br />
+	    <input type="checkbox" name="poluchatel__165" value="165">&nbsp;Ирина<br />
+        <input type="checkbox" name="poluchatel__163" value="163">&nbsp;Сергей Редько<br />
+	    <input type="checkbox" name="poluchatel__164" value="164">&nbsp;Сергей Сметанин<br /> 
+        <input type="checkbox" name="poluchatel__1" value="1">&nbsp;You<br />
+	</fieldset>
+	
+<?// /blok poluchateley //?>	
+	<fieldset class="pole">
+	    <legend>&nbsp;&nbsp;Тема :&nbsp;&nbsp;</legend>
+	    <input placeholder="Тема напоминания/сообщения.."  class='adminform' type="text" value="<?=$art_data['caption']?>" name="form__caption" style="width:98%;border:1px solid #ccc;" />
+    </fieldset>
+
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Сообщение :&nbsp;&nbsp;</legend>
+        <textarea name="form__content" id="form__content" style="width:98%;border:1px solid #ccc;" rows="5">
+			<?=$art_data["content"];?>
+		</textarea>
+<!--
+        <script type="text/javascript">
+            CKEDITOR.replace( 'content',{
+            //    toolbar : 'Basic'
+            //    toolbar : 'Medium'
+                toolbar : 'Default'
+            });
+        </script>
+-->
+    </fieldset>
+	
+	
+	
+	
+	
+	<input name ="save" type="image" src="design/ico_save.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Сохранить" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''" onclick="articleForm.submit();">
+
+</form>	
+<hr />
+<!-- ************************************************************* -->
+
+	
+

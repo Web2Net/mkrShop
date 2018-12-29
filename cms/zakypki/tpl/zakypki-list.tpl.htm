@@ -1,0 +1,115 @@
+<style>
+.line_block { 
+    width:100px; 
+    height:auto; 
+    background:#f1f1f1; 
+    float:left; 
+    margin: 0 2px; 
+    text-align:center;
+    padding: 2px;
+}
+</style>
+<div style="border-bottom:1px solid #000;"></div>
+<table style="width: 100%;margin-bottom:3px;" cellpadding="0" cellspacing="0">
+    <tr>
+        <td align="left">
+<?if (isset($category_id)){?>
+            <a onclick="javascript:history.back();"><img src="design/ico_back.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Назад" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''"></a> 
+<?}?>
+            <a href="?mod=<?=$mod?>&com=add"><img src="design/ico_add_artic.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Добавить статью в эту категорию" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''"></a>
+        </td>
+    </tr>
+</table>
+
+<div style="width:100%; height:1px; clear:both;"></div> 
+
+<div class="line_block" style="width:5%;font-weight: 900;">id</div> 
+<div class="line_block" style="width:10%;font-weight: 900;">Дата</div> 
+<div class="line_block" style="width:10%;font-weight: 900;">Чип</div>
+<div class="line_block" style="width:10%;font-weight: 900;">Барабан</div>
+<div class="line_block" style="width:10%;font-weight: 900;">Тонер</div>
+<div class="line_block" style="width:10%;font-weight: 900;">Картридж</div>
+<div class="line_block" style="width:10%;font-weight: 900;">Тефлон</div>
+<div class="line_block" style="width:10%;font-weight: 900;">Вал</div>
+<div class="line_block" style="width:10%;font-weight: 900;">Прочий ливер</div>
+<div class="line_block" style="width:7%;font-weight: 900;">Завершен</div>
+
+<div style="width:100%; height:1px; clear:both;"></div>
+<?
+if($art_data !== ""){
+  foreach($art_data as $k=>$v){
+?>
+<div style="width:100%; height:1px; clear:both;"></div> 
+
+<div class="line_block" style="width:5%;">
+	<a href="?mod=<?=$mod?>&com=edit&id=<?=$v['id']?>" title="<?=MANDATORY_EDIT?>"><?=$v['id']?></a></div> 
+<div class="line_block" style="width:10%;"><?=$v['date_create']?><br><?=$v['author']?></div> 
+<div class="line_block" style="width:10%;"><?=$v['chip']?></div>
+<div class="line_block" style="width:10%;"><?=$v['drum']?></div>
+<div class="line_block" style="width:10%;"><?=$v['toner']?></div>
+<div class="line_block" style="width:10%;"><?=$v['cartridge']?></div>
+<div class="line_block" style="width:10%;"><?=$v['teflon']?></div>
+<div class="line_block" style="width:10%;"><?=$v['vali']?></div>
+<div class="line_block" style="width:10%;"><?=$v['zipa']?></div>
+<div class="line_block" style="width:7%;"><?=$v['archiv']?></div>
+
+<div style="width:100%; height:1px; clear:both; border-bottom: 1px solid #ccc;"></div>
+<?
+  }
+}
+?>
+
+<?/////////////////////////////////////////////////////////?>
+<!--
+<style type="text/css">
+    .list_content div{
+        border:1px solid #ccc;
+        background-color: #eee;
+    }
+</style>
+<dir class="container-fluid list_caption">
+    <div class="row">
+        <div class="col-1">id</div>
+        <div class="col-1">Дата</div>
+        <div class="col-1">Чип</div>
+        <div class="col-1">Барабан</div>
+        <div class="col-1">Тонер</div>
+        <div class="col-1">Картридж</div>
+        <div class="col-1">Тефлон</div>
+        <div class="col-1">Вал</div>
+        <div class="col-1">Прочий ливер</div>
+        <div class="col-1"></div>
+        <div class="col-1"></div>
+        <div class="col-1">Завершен</div>
+    </div>
+</dir>
+<?
+if($art_data !== ""){
+  foreach($art_data as $k=>$v){
+?>
+<div style="width:100%; height:1px; clear:both;"></div> 
+
+<dir class="container-fluid list_content">
+    <div class="row">
+        <div class="col-1 col-sm-1"><a href="?mod=<?=$mod?>&com=edit&id=<?=$v['id']?>" title="<?=MANDATORY_EDIT?>"><?=$v['id']?></a></div>
+        <div class="col-1 col-sm-1"><?=$v['date_create']?><br><?=$v['author']?></div>
+        <div class="col-1 col-sm-1"><?=$v['chip']?></div>
+        <div class="col-1 col-sm-1"><?=$v['drum']?></div>
+        <div class="col-1 col-sm-1"><?=$v['toner']?></div>
+        <div class="col-1 col-sm-1"><?=$v['cartridge']?></div>
+        <div class="col-1 col-sm-1"><?=$v['teflon']?></div>
+        <div class="col-1 col-sm-1"><?=$v['vali']?></div>
+        <div class="col-1 col-sm-1"><?=$v['zipa']?></div>
+        <div class="col-1 col-sm-1"></div>
+        <div class="col-1 col-sm-1"></div>
+        <div class="col-1 col-sm-1"><?=$v['archiv']?></div>
+    </div>
+</dir>
+
+
+<div style="width:100%; height:1px; clear:both; border-bottom: 1px solid #ccc;"></div>
+<?
+  }
+}
+?>
+-->

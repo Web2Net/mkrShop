@@ -1,0 +1,218 @@
+<?//SYS::varDump($item_list,__FILE__,__LINE__,'item_list');?>
+<?//SYS::varDump(PAGE_URL,__FILE__,__LINE__,'PAGE_URL');?>
+
+<style>
+.price span {
+background-color: #f5f5f5;
+border-left: 2px solid #7b7b7b;
+padding: 5px;
+font: bold 25px Arial;
+color:#7B7B7B;
+}
+.price span font {
+font-size: 12px;
+vertical-align: super;
+}
+.wrap_catalog_sell{
+  border: 2px solid #fff;
+}
+.wrap_catalog_sell:hover{
+  border: 2px dashed #95CF24;
+  box-shadow:
+    0 0 0 1px #95CF24,
+    inset 0 0 0 1px #95CF24;}
+    
+</style>
+<span style="font-size:1px">&nbsp;</span>
+<table style="width: 98%;margin:7px 0px;" cellpadding="0" cellspacing="0"><tr><td align="left" style="padding-left:15px;">
+<a href="?mod=<?=$mod?>&type=tag&com=list<?if($display!=""){?>&display=<?=$display?><?}?>"><img src="design/ico_back.gif" style="border: 0px solid rgb(90, 126, 220); cursor: pointer;" title="<?=SHOP_ADMIN_BUTTON_BACK?>" onmouseover="this.style.background='#DBFFC1';" onmouseout="this.style.background=''" class="r10" /></a>
+</td><td align="center" style="padding-left:7px;">
+<?if($display=="tab"){?>
+<a href="?mod=<?=$mod?>&type=<?=$type?>&com=add&tag=<?=$tag?>&id=new&display=<?=$display?>"><img src="design/ico_add_artic.gif" style="border: 0px solid rgb(90, 126, 220); cursor: pointer;" title="<?=SHOP_ADMIN_BUTTON_ADD_NEW?>" onmouseover="this.style.background='#DBFFC1';" onmouseout="this.style.background=''" class="r10" /></a>
+<?}else{?>
+<a href="javascript:onSlimbox('?mod=<?=$mod?>&type=<?=$type?>&com=add&tag=<?=$tag?>&id=new')"><img src="design/ico_add_artic.gif" style="border: 0px solid rgb(90, 126, 220); cursor: pointer;" title="<?=SHOP_ADMIN_BUTTON_ADD_NEW?>" onmouseover="this.style.background='#DBFFC1';" onmouseout="this.style.background=''" class="r10" /></a>
+<?}?>
+</td><td align="center" style="padding-left:7px;">
+<a href="<?=SITE_URL."/shop/".$tag_list[substr($tag_list[$tag]["connect"],1,-1)]["seolink"]."/".$tag_list[$tag]["seolink"].""?>" title="<?=SHOP_ADMIN_BUTTON_VIEW_ONLINE?>" target="_blank"><img src="design/internet.gif" style="border: 0px solid rgb(90, 126, 220); cursor: pointer;width:48px;" title="<?=SHOP_ADMIN_BUTTON_VIEW_ONLINE?>" onmouseover="this.style.background='#DBFFC1';" onmouseout="this.style.background=''" class="r10" /></a>
+</td><td align="center" width="95%" style="padding-left:7px;">
+
+</td><td class="heading1" align="right" valign="bottom">
+<nobr><span style="color:#e7e7e7;font-size:24px;"><?=SHOP_NAME?></span></nobr><br>
+<nobr><span style="color:#444;"></span><?=$tag_list[$tag]['caption']?></nobr>
+</tr>
+</table>
+
+<?////////////////// NALICHIE BUTTONS /////////////////////////?>
+<style type="text/css">
+.h_block_buttons div{
+    float: left;
+    padding: 5px; margin: 2px;
+    border:1px solid #eee; 
+}    
+</style>
+<!--
+<div class="h_block_buttons">
+    <div class="r5" style="">
+        <a href="<?=$_SERVER[REQUEST_URI]?>&brand=all">Бренды</a>
+    </div>
+</div>
+<div style="clear: both;"></div>
+-->
+<div class="h_block_buttons">
+<?
+// Массив значений наличие ввиде (значение ; цвет ; надпись)
+$postavschik = "erc";
+$arr_nalichie = array("full ; #fff ; Всё", 
+                       "nalichie_y ; #f0fff0 ; Есть",
+                       "nalichie_n ; #fff5ee ; Нет",
+                       "nalichie_r ; #fffacd ; В резерве",
+                       "nalichie_arch ; #eee ; Архив"
+                      );
+
+foreach($arr_nalichie as $nalichie_k => $nalichie_v){
+    $nalichie_data = explode(";",$nalichie_v);
+    $nalichie_link = trim($nalichie_data['0']);
+    $nalichie_bg = $nalichie_data['1'];
+    $nalichie_caption = $nalichie_data['2'];
+?>
+    <div class="r5" style="background-color: <?=$nalichie_bg?>;border:<?if($_SESSION['display']==$nalichie_link){?>3px solid #00ff00<?}else{?>1px solid #ссс<?}?>;">
+        <a href="<?=$_SERVER[REQUEST_URI]?>&display=<?=$nalichie_link?>"><?=$nalichie_caption?></a>
+    </div>
+<?    
+}
+?>
+</div>
+<div style="clear: both;"></div>
+<?////////////////// /NALICHIE BUTTONS /////////////////////////?>
+
+
+<style type="text/css">
+#shop_item_list{
+    padding:0px 0px 0px 2px;
+    width:100%;min-height:500px;
+} 
+#shop_item_list input{
+    margin: 5px;
+}   
+</style>
+<div align="center">
+<div id="shop_item_list">
+
+<?if ($item_list!=''){?>
+
+<?$count_item = count($item_list)?>
+<div style="clear:both;height:10px;"></div>
+<div>Всего на странице <?=$count_item?> позиций.</div>
+<div style="clear:both;height:10px;"></div>
+
+<?$i=1;?>
+
+<?foreach($item_list as $key=>$val){?>
+<?
+
+if(file_exists(SITE_PATH."/userfiles/product-image/".$val["1Cid"].".jpg")){
+		    $img1="/userfiles/product-image/".$val["1Cid"].".jpg";
+		}
+		else{
+		    $img1="/image/".$mod."/".$type."/".$val['id']."/1m.png";
+		}
+
+if(!file_exists(getenv("DOCUMENT_ROOT").$img1))$img1="/design/img/noimage_740x480.png";
+if ($val['showing']!=1){$item_color = " #FFF1F1";}else{if ($val['flagman']==1){$item_color = "#E0EEE0";}else{$item_color = "#efefea";}}
+if($val['p1']==1){$ddp_border = "border:2px solid #0ea0f3;";}else{$ddp_border = "";}
+
+?>
+
+<?////////////////////////////////?>
+<style>
+    .shop_item_list{
+        border:1px solid #ccc;
+        padding: 2px 0px;
+        font-size: 10px;
+    }
+</style>
+<?$price_roznica = Price::getPrice($val['postavschik'],$val['price_roznica'],$val['price_diler'],$val['p1'],$val['p2']);?>
+<?
+if($val["nalichie"] == "+"){
+    $bg_nalicie = "#F0FFF0";
+}
+elseif ($val["nalichie"] == "-"){
+    $bg_nalicie = "#FFF5EE";
+}
+elseif ($val["nalichie"] == "arch"){
+    $bg_nalicie = "#eee";
+}
+else{
+    $bg_nalicie = "#FFFACD";
+}
+?>
+<?
+if($val['p1'] == "0"){
+    $ddp_ico = "<img src='/design/icon/ico_dollar.png' style='width:10px' title='DDP' />";
+}
+else{
+    $ddp_ico = "";
+}
+?>
+<?
+if($val['p2'] == "1"){
+    $monitor_ico = "<img src='/design/icon/ico_glaz.png' style='width:10px' title='Monitor' />";
+}
+else{
+    $monitor_ico = "";
+}
+?>
+<!--
+<div style="width:98%;">
+    <div class="shop_item_list" style="float: left;width:5%;"><img src="<?=$img1?>" style="width:40px;" /></div>
+    <div class="shop_item_list" style="float: left;width:5%;"><?=$val['id']?></div>
+    <div class="shop_item_list" style="float: left;width:5%"><?=$val['postavschik']?></div>
+    <div class="shop_item_list" style="float: left;width:10%;"><?=strtoupper($val['brand'])?></div>
+    <div class="shop_item_list" style="float: left;width:10%;"><?=$val["1Cid"]?></div>
+    <div class="shop_item_list" style="float: left;width:48%;"><a target="_top" href="javascript:onSlimbox('?mod=<?=$mod?>&type=<?=$type?>&com=edit&tag=<?=$tag?>&id=<?=$val['id']?>')" title="<?=SHOP_ADMIN_NOTE_EDIT?>"><?=$val['caption']?></a></div>
+    <div class="shop_item_list" style="float: left;width:5%;"><?=$val['price_diler']?></div>
+    <div class="shop_item_list" style="float: left;width:5%;"><?=$price_roznica?></div>
+    <div class="shop_item_list" style="float: left;width:3%;"><?=$val['garantiya']?></div>
+    <div class="shop_item_list" style="float: left;width:2%;"><?=$ddp_ico?></div>
+    <div class="shop_item_list" style="float: left;width:2%;"><?=$monitor_ico?></div>
+</div>
+<div style="clear: both;"></div>
+-->
+
+<table style="width:100%;font-size:9px;border:1px solid #000;background:<?=$bg_nalicie?>">
+    <tr>
+        <td class="shop_item_list" style="width:50px;">
+            <input rel="work_with_checked" type="checkbox" name="works_list[]" value="<?=$val['id']?>" id="<?=$val['id']?>" />
+            <?=$val['id']?>
+<?
+$f_up = explode(" ",$val['first_update']);
+$f_up_date = $f_up['0'];
+$l_up = explode(" ",$val['last_update']);
+$l_up_date = $l_up['0'];
+?>            
+            <div style="font-size:8px;"><?=$f_up_date?></div>
+            <div style="font-size:8px;"><?=$l_up_date?></div>
+        </td>
+        <td class="shop_item_list" style="width:40px;"><img src="<?=$img1?>" style="width:35px;" /></td>
+        <td class="shop_item_list" style="width:20px;"><?=$val['postavschik']?></td>
+        <td class="shop_item_list" style="width:75px;"><?=strtoupper($val['brand'])?></td>
+        <td class="shop_item_list" style="width:100px;"><?=trim($val["1Cid"])?></td>
+        <td class="shop_item_list" style="width:200px;">
+            <a target="_top" href="javascript:onSlimbox('?mod=<?=$mod?>&type=<?=$type?>&com=edit&tag=<?=$tag?>&id=<?=$val['id']?>')" title="<?=SHOP_ADMIN_NOTE_EDIT?>"><?=$val['caption']?></a>
+        </td>
+        <td class="shop_item_list" style="width:50px;"><?=$val['price_diler']?></td>
+        <td class="shop_item_list" style="width:50px;"><?=$price_roznica?></td>
+        <td class="shop_item_list" style="width:20px;"><?=$val['garantiya']?></td>
+        <td class="shop_item_list" style="width:10px;"><?=$ddp_ico?></td><?//DDP?>
+        <td class="shop_item_list" style="width:10px;"><?=$monitor_ico?></td><?//Monitor?>
+    </tr>
+</table>
+
+<?////////////////////////////////?>
+
+
+
+<?}}?>
+<div style="clear:both;"></div>
+</div>
+</div>

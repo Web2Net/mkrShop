@@ -1,0 +1,98 @@
+<?SYS::varDump($item_list,__FILE__,__LINE__,'item_list');?>
+<?SYS::varDump(PAGE_URL,__FILE__,__LINE__,'PAGE_URL');?>
+<span style="font-size:1px">&nbsp;</span>
+<table style="width: 98%;margin:7px 0px;" cellpadding="0" cellspacing="0"><tr><td align="left" style="padding-left:15px;">
+<a href="?mod=<?=$mod?>&type=tag&com=list<?if($display!=""){?>&display=<?=$display?><?}?>"><img src="design/ico_back.gif" style="border: 0px solid rgb(90, 126, 220); cursor: pointer;" title="Вернуться к списку тегов" onmouseover="this.style.background='#DBFFC1';" onmouseout="this.style.background=''" class="r10" /></a>
+</td><td align="center" style="padding-left:7px;">
+
+<?if(UserItem::userCanSee($_SESSION['user_level'],7)){?>
+<?if($display=="tab"){?>
+<a href="?mod=<?=$mod?>&type=<?=$type?>&com=add&tag=<?=$tag?>&id=new&display=<?=$display?>"><img src="design/ico_add_artic.gif" style="border: 0px solid rgb(90, 126, 220); cursor: pointer;" title="Добавить запись с этим тегом" onmouseover="this.style.background='#DBFFC1';" onmouseout="this.style.background=''" class="r10" /></a>
+<?}else{?>
+<a href="javascript:onSlimbox('?mod=<?=$mod?>&type=<?=$type?>&com=add&tag=<?=$tag?>&id=new')"><img src="design/ico_add_artic.gif" style="border: 0px solid rgb(90, 126, 220); cursor: pointer;" title="Добавить запись с этим тегом" onmouseover="this.style.background='#DBFFC1';" onmouseout="this.style.background=''" class="r10" /></a>
+<?}?>
+<?}?>
+
+</td><td align="center" style="padding-left:7px;">
+<a href="<?=SITE_URL."/".$parent_data['seo']."/"?>" title="Посмотреть на сайте" target="_blank"><img src="design/internet.gif" style="border: 0px solid rgb(90, 126, 220); cursor: pointer;width:48px;" title="Посмотреть на сайте" onmouseover="this.style.background='#DBFFC1';" onmouseout="this.style.background=''" class="r10" /></a>
+</td><td align="center" width="95%" style="padding-left:7px;">
+
+</td><td class="heading1" align="right" valign="bottom">
+<nobr><span style="color:#e7e7e7;font-size:24px;"><?=MOD_NAME?></span></nobr><br>
+<nobr><span style="color:#444;"></span><?=$tag_list[$tag]['caption']?></nobr>
+</tr>
+</table>
+
+
+
+<div>
+<div style="padding:0px 0px 0px 12px;width:763px;min-height:500px;">
+<?if ($item_list!=''){?>
+<?
+$i=1;
+echo "Всего на странице : " . $count_users = count($item_list);
+?>
+<?foreach($item_list as $key=>$val){
+    $i++;
+    if(($i%2) == "0"){
+        $user_color = " #FFF1F1";
+
+    }
+    else{
+        $user_color = "#F1FFE6";
+    }
+    if($val["level"] == "9" && $_SESSION['user_level'] !== "9"){ // Убираем иконку юзера Web2Net от посторонних глаз
+    }
+    else{
+        $img1="/image/".$mod."/".$type."/".$val['id']."/1m.png";
+        if(!file_exists(getenv("DOCUMENT_ROOT").$img1))$img1="/design/img/noimage_450x450.png";
+?>
+<!-- ******************************************* -->
+
+
+<table style="background-color:<?=$user_color?>;margin:0px 12px 12px 0px;border: 1px solid #ccc;padding:5px;width:100%;"><tr>
+<td style="width:25px;"><?=$val['id']?></td>
+<td style="width:35px;">
+<?if(UserItem::userCanChangeUser($_SESSION['user_id'],$_SESSION['user_level'],$val['id'],$val['level'])){?>
+<!--<a href="?mod=<?=$mod?>&type=<?=$type?>&com=<?=$com?>&tag=<?=$val1?><?if($display!=""){?>&display=<?=$display?><?}?>" style="line-height:17px;color:#5E84B8;font-size:12px;<?if($val1==$tag){?>font-weight:bold;<?}?>"><?=$tag_list[$val1]['caption']?></a>&nbsp; -->
+<?if($display=="tab"){?>
+<a href="?mod=<?=$mod?>&type=<?=$type?>&com=edit&tag=<?=$tag?>&id=<?=$val['id']?><?if($display!=""){?>&display=<?=$display?><?}?>" title="<?=$val['organization']?>">
+<?}else{?>
+<a href="javascript:onSlimbox('?mod=<?=$mod?>&type=<?=$type?>&com=edit&tag=<?=$tag?>&id=<?=$val['id']?>')" title="<?=$val['organization']?>">
+<?}?>
+<?}?>
+    <img src="<?=$img1?>" style="height:25px;padding:2px 10px 2px 5px;" align="left" >
+</a>
+</td>
+    <td style="width:250px;padding:2px;">
+<?if(UserItem::userCanChangeUser($_SESSION['user_id'],$_SESSION['user_level'],$val['id'],$val['level'])){?>
+<!--<a href="?mod=<?=$mod?>&type=<?=$type?>&com=<?=$com?>&tag=<?=$val1?><?if($display!=""){?>&display=<?=$display?><?}?>" style="line-height:17px;color:#5E84B8;font-size:12px;<?if($val1==$tag){?>font-weight:bold;<?}?>"><?=$tag_list[$val1]['caption']?></a>&nbsp; -->
+<?if($display=="tab"){?>
+<a href="?mod=<?=$mod?>&type=<?=$type?>&com=edit&tag=<?=$tag?>&id=<?=$val['id']?><?if($display!=""){?>&display=<?=$display?><?}?>" title="<?=$val['organization']?>">
+<?}else{?>
+<a href="javascript:onSlimbox('?mod=<?=$mod?>&type=<?=$type?>&com=edit&tag=<?=$tag?>&id=<?=$val['id']?>')" title="<?=$val['organization']?>">
+<?}?>
+<?}?>   
+    <span style="line-height:17px;color:#5E84B8;font-size:12px;font-weight:bold;"><?=$val['short_caption']?></a></td>
+<?if($_SESSION['user_level'] >= '7'){?>
+    <?if($val['edrpoy'] !== '0'){?>
+    <td>ЕДРПОУ <?=$val['edrpoy']?></td>
+    <?}?>
+<?}?>   
+    <td style="width:250px;padding:2px;"><?=$val["phone"]?><br /><?=$val["name"]?> <?=$val["surname"]?></td>
+    <td style="width:250px;padding:2px;"><?=$val["email"]?></td>
+</tr></table>
+
+
+
+<!-- ******************************************* -->
+
+
+
+<?}}?>
+
+<?}?>
+<div style="clear:both;"></div>
+</div>
+</div>
+<div class="both" style="height:20px;"></div>

@@ -1,0 +1,30 @@
+<div class="wrap_catalog_sell view_<?=$_SESSION['grid_list']?> r20" style="height:200px;width:98%;">      
+<?//////////// butt_print ///////////////?>
+    <div style="float:right;padding:5px;margin-right:30px;">
+        <a href="<?=$a_print?>" target="_blank">
+            <img src="<?=PATH_IMG?>/ico_print.png" style="width:30px;position:absolute;" title="print" alt="print" />
+        </a>
+    </div>
+	
+<?//////////// /butt_print ///////////////?>
+<table class="_catalog_sell" style="width:100%;">
+    <tr>
+        <td style="padding:10px;width:170px;vertical-align:center;">
+            <div style="margin-bottom:-25px;position:relative;z-index:2;"><span class="<?=$wr_pr?> r5"><?=$pr?></a></div>
+            <a href="<?=$a_href?>" <?=$fancy?> title="<?=$caption?>">
+                <img  class="r20" src="<?=$img1?>" style="width:170px;padding-top:25px;" />
+            </a>
+			
+        </td>
+        <td style="width:500px;padding:0px 10px 5px 5px;vertical-align:top;text-align:left;">
+            <a href="<?=$a_href?>" <?=$fancy?> title="<?=$caption?>">
+                <div class="caption5" style="padding:2px;"><?=$caption;?>&nbsp;<span style="padding:0px;font-size:10px;">(<?=$kod;?>)</span></div>
+				<div style="font-size:1pc;padding:2px;color:#000"><?=$description;?></div>
+            </a>
+        </td>
+        <td style="width:180px;text-align:right;vertical-align:center;">
+            <?include PATH_SHOP_MOD_SITE_TPL."/price_and_buttonBuy_list.php";?>
+        </td>
+    </tr>
+</table>
+</div>

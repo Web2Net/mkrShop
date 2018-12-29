@@ -1,0 +1,461 @@
+<div style="border-bottom:1px solid #000;"></div>
+<table style="width: 100%;margin-bottom:3px;" cellpadding="0" cellspacing="0">
+    <tr>
+        <td align="left">
+<?if (isset($category_id)){?>
+            <a onclick="javascript:history.back();"><img src="design/ico_back.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Назад" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''"></a> 
+<?}?>
+            
+        </td>
+		 
+
+    </tr>
+</table>
+<div class="both br_5"></div>
+
+<?////////////////////////////////////////////////////////////////////////////////////?>
+<style type="text/css">
+.tabs {
+  position: relative;
+  min-height: 200px;
+  height: 10000px;
+  clear: both;
+  margin: 25px 0;
+}
+.tab {
+  float: left;
+}
+.tab label {
+  background: #eee;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-left: -1px;
+  position: relative;
+  left: 1px;
+}
+.tab [type=radio] {
+  display: none;
+}
+.content {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  background: white;
+  right: 0;
+  bottom: 0;
+  padding: 20px;
+  border: 1px solid #ccc;
+}
+[type=radio]:checked ~ label {
+  background: white;
+  border-bottom: 1px solid white;
+  z-index: 2;
+}
+[type=radio]:checked ~ label ~ .content {
+  z-index: 1;
+}
+tabs td{
+	border:1px solid #ccc;
+}
+.color_blocks{
+	float:left;
+	width:18%;
+	height:15px;
+	font-size:10px;
+	padding:2px;
+    overflow: hidden; /* Обрезаем все, что не помещается в область */
+    text-overflow: ellipsis; /* Добавляем многоточие */
+}	
+</style>
+
+<?
+$models = Napolnyashka::getListFromTableWhere("tech_models");
+$toners = Napolnyashka::getListFromTableWhere("tech_toner");
+$bynkers = Napolnyashka::getListFromTableWhere("tech_bynker");
+$d_units = Napolnyashka::getListFromTableWhere("tech_d_unit");
+$developers = Napolnyashka::getListFromTableWhere("tech_developer");
+$dr_units = Napolnyashka::getListFromTableWhere("tech_dr_unit");
+$devices = Napolnyashka::getListFromTableWhere("tech_devices");
+$brands = Napolnyashka::getListFromTableWhere("tech_brands");
+$lentas = Napolnyashka::getListFromTableWhere("tech_lenta");
+?>
+
+<tabs>
+<div class="tabs">
+    
+    <div class="tab">
+        <input type="radio" id="tab-1" name="tab-group-1" checked>
+        <label for="tab-1">Машины</label>
+       
+        <div class="content">
+
+            <a href="?mod=<?=$mod?>&com=add"><img src="design/ico_add_artic.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Добавить статью в эту категорию" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''"></a>
+
+            <form  action="" name="works_massiv" id="works_massiv" method="post" enctype="multipart/form-data" >
+                <input type="hidden" id="works_massiv_action" name="works_massiv_action" value="">
+<?if ($models != ''){
+$c_models = count($models);
+?>
+
+                <div class="both br_5"></div> 
+<?$i=1;?>
+<?
+foreach($models as $key=>$model){
+    $i++;
+    if($i % 2 == 0){
+        $bg_col = "#eee";
+    }
+    else{
+        $bg_col = "#fff";
+    }
+?>
+                <div style="border:1px solid #ccc">
+
+                <table style="text-align:left;"><tr style="background-color: <?=$bg_col?>">
+<?
+if($model['color'] == "1"){$img_color = "/design/img/znak_toner_color.png";}else{$img_color = "/design/img/znak_toner_black.png";}
+?>
+                	<td style="width:1%;"><img src="<?=$img_color?>" style="width:10px;"></td>
+                    <td style="width:7%;"><?=$model['caption']?></td>
+<?
+// По значению "$model['device_id']" выбираем из табл "tech_devices" название дивайса для данной модели 
+$model_device = Napolnyashka::getListFromTableWhere("tech_devices", "id", $model['device_id']);
+?>
+                    <td style="width:5%;"><?=$model_device['0']['caption']?> <?=$model['device_format']?></td>
+<?
+// По значению "$model['brand_id']" выбираем из табл "tech_brands" название бренда для данной модели 
+$model_brand = Napolnyashka::getListFromTableWhere("tech_brands", "id", $model['brand_id']);
+?>
+                    <td style="width:5%;"><?=$model_brand['0']['caption']?></td>
+
+                    <td style="width:20%;">
+<?///////////////////// TONER ////////////////////////////?>
+                        <div style="float:left;font-weight: 600;">Тонер&nbsp;:&nbsp;</div>
+<?
+// По значению "$model['id']" выбираем из табл "tech_toner" название тонера для данной модели 
+$model_toners = Napolnyashka::getListFromTableLike("tech_toner", "model_id", ";".$model['id'].";");
+$count_m_toner = count($model_toners);
+if($count_m_toner > "1"){
+    foreach($model_toners as $model_toner_key => $model_toner_val){
+?>
+                    <?  if($model_toner_val['color'] == "b"){
+                            $toner_color_img = "#000";
+                        }
+                        elseif($model_toner_val['color'] == "y"){
+                            $toner_color_img = "#e0da29";
+                        }
+                        elseif($model_toner_val['color'] == "c"){
+                            $toner_color_img = "blue";
+                        }
+                        elseif($model_toner_val['color'] == "m"){
+                            $toner_color_img = "red";
+                        }
+                        else{
+                            $toner_color_img = "#ccc";
+                        }
+                    ?>
+
+                        
+                        <div class="color_blocks" style="border: 2px solid <?=$toner_color_img?>;"><?=$model_toner_val['caption']?></div>
+                
+                    
+<?  }
+}
+else{
+?>
+                    <div><?=$model_toners['0']['caption']?></div>
+<?}
+?>
+<?///////////////////// /TONER ////////////////////////////?>
+                        <div style="clear:both;height:2px;"></div>
+<?///////////////////// DR_UNIT ///////////////////////////?>
+                       <div style="float:left;font-weight: 600;">Dr Unit&nbsp;:&nbsp;</div>
+<?
+// По значению "$model['id']" выбираем из табл "tech_dr_unit" название тонера для данной модели 
+$model_dr_unit = Napolnyashka::getListFromTableLike("tech_dr_unit", "model_id", ";".$model['id'].";");
+$count_m_dr_unit = count($model_dr_unit);
+if($count_m_dr_unit > "1"){
+    foreach($model_dr_unit as $model_dr_unit_key => $model_dr_unit_val){
+?>
+                    <?  if($model_dr_unit_val['color'] == "b"){
+                            $dr_unit_color_img = "#000";
+                        }
+                        elseif($model_dr_unit_val['color'] == "y"){
+                            $dr_unit_color_img = "#e0da29";
+                        }
+                        elseif($model_dr_unit_val['color'] == "c"){
+                            $dr_unit_color_img = "blue";
+                        }
+                        elseif($model_dr_unit_val['color'] == "m"){
+                            $dr_unit_color_img = "red";
+                        }
+                        else{
+                            $dr_unit_color_img = "#ccc";
+                        }
+                    ?>
+
+                        <div class="color_blocks" style="border: 2px solid <?=$dr_unit_color_img?>;"><?=$model_dr_unit_val['caption']?></div>
+                
+                    
+<?  }
+}
+else{
+?>
+                    <div><?=$model_dr_unit['0']['caption']?></div>
+<?}
+?>
+<?////////////////////// /DR_UNIT ///////////////////////////?>
+                        <div style="clear:both;"></div>
+<?////////////////////// DEVELOPER ///////////////////////////?>
+                       <div style="float:left;font-weight: 600;">Developer&nbsp;:&nbsp;</div>
+<?
+// По значению "$model['id']" выбираем из табл "tech_developer" название девелопера для данной модели 
+$model_developer = Napolnyashka::getListFromTableLike("tech_developer", "model_id", ";".$model['id'].";");
+$count_m_developer = count($model_developer);
+if($count_m_developer > "1"){
+    foreach($model_developer as $model_developer_key => $model_developer_val){
+?>
+                    <?  if($model_developer_val['color'] == "b"){
+                            $developer_color_img = "#000";
+                        }
+                        elseif($model_developer_val['color'] == "y"){
+                            $developer_color_img = "#e0da29";
+                        }
+                        elseif($model_developer_val['color'] == "c"){
+                            $developer_color_img = "blue";
+                        }
+                        elseif($model_developer_val['color'] == "m"){
+                            $developer_color_img = "red";
+                        }
+                        else{
+                            $developer_color_img = "#ccc";
+                        }
+                    ?>
+
+                        <div class="color_blocks" style="border: 2px solid <?=$developer_color_img?>;"><?=$model_developer_val['0']['caption']?></div>
+                
+                    
+<?  }
+}
+else{ 
+?>
+                    <div><?=$model_developer['0']['caption']?></div>
+<?}
+?>
+
+<?////////////////////// /DEVELOPER ///////////////////////////?>
+                        <div style="clear:both;"></div>
+<?///////////////////// DEVELOPER_UNIT ///////////////////////////?>
+                       <div style="float:left;font-weight: 600;">Dev.Unit&nbsp;:&nbsp;</div>
+<?
+// По значению "$model['id']" выбираем из табл "tech_d_unit" название тонера для данной модели 
+$model_d_unit = Napolnyashka::getListFromTableLike("tech_d_unit", "model_id", ";".$model['id'].";");
+$count_m_d_unit = count($model_d_unit);
+if($count_m_d_unit > "1"){
+    foreach($model_d_unit as $model_d_unit_key => $model_d_unit_val){
+?>
+                    <?  if($model_d_unit_val['color'] == "b"){
+                            $d_unit_color_img = "#000";
+                        }
+                        elseif($model_d_unit_val['color'] == "y"){
+                            $d_unit_color_img = "#e0da29";
+                        }
+                        elseif($model_d_unit_val['color'] == "c"){
+                            $d_unit_color_img = "blue";
+                        }
+                        elseif($model_d_unit_val['color'] == "m"){
+                            $d_unit_color_img = "red";
+                        }
+                        else{
+                            $d_unit_color_img = "#ccc";
+                        }
+                    ?>
+
+                        <div class="color_blocks" style="border: 2px solid <?=$d_unit_color_img?>;"><?=$model_d_unit_val['caption']?></div>
+                
+                    
+<?  }
+}
+else{
+?>
+                    <div style="width:100%;min-height:20px;font-size:10px;"><?=$model_dd_unit['0']['caption']?></div>
+<?}
+?>
+<?////////////////////// /DEVELOPER_UNIT ///////////////////////////?>
+
+                    </td>
+
+
+        	        
+        	        <td style="width:10%;"><?=$model['article']?></td>
+
+        	        <td style="width:2%;padding:2px;">
+			            <div>
+					        <a href="?mod=<?=$mod?>&type=<?=$type?>&com=edit&id=<?=$model['id']?>" title="<?=MANDATORY_EDIT?>">
+                                <img src="<?=PATH_IMG_ADMIN?>/ico_edit_sm.gif" alt="<?=MANDATORY_EDIT?>" vspace="1" border="0" hspace="1" style="margin-bottom:-7px;">
+			                </a>
+				        </div>
+			        </td>
+		        </tr></table>
+		        </div>
+		        <div class="br_5" style="clear: both;"></div>
+<?}?>
+<?}?>
+            </form>
+        </div>
+    </div>
+    
+    <div class="tab">
+        <input type="radio" id="tab-2" name="tab-group-1">
+        <label for="tab-2">Бренды</label>
+       
+        <div class="content">
+           
+<?foreach($brands as $key=>$brand){?>
+                <table><tr>
+            	    <td><?=$brand['caption']?></td>
+            	</tr></table>
+            	<div class="br_5" style="clear: both;"></div>   
+<?}?>
+             
+            <div class="br_5" style="clear: both;"></div>
+        </div> 
+    </div>
+    
+    <div class="tab">
+        <input type="radio" id="tab-3" name="tab-group-1">
+        <label for="tab-3">Дивайсы</label>
+     
+        <div class="content">
+            
+<?foreach($devices as $key=>$device){?>
+                <table><tr>
+            	    <td><?=$device['caption']?></td>
+            	</tr></table>
+            	<div class="br_5" style="clear: both;"></div>    
+<?}?>
+             
+            <div class="br_5" style="clear: both;"></div>
+        </div> 
+    </div>
+
+    <div class="tab">
+        <input type="radio" id="tab-4" name="tab-group-1">
+        <label for="tab-4">Тонер (тубы)</label>
+     
+        <div class="content">
+            
+<?foreach($toners as $key=>$toner){?>
+                <table><tr>
+            	    <td><?=$toner['caption']?></td>
+            	</tr></table>
+            	<div class="br_5" style="clear: both;"></div>    
+<?}?>
+             
+            <div class="br_5" style="clear: both;"></div>
+        </div> 
+    </div>
+
+    <div class="tab">
+        <input type="radio" id="tab-5" name="tab-group-1">
+        <label for="tab-5">Drum Units</label>
+     
+        <div class="content">
+           
+<?foreach($dr_units as $key=>$dr_unit){?>
+                <table><tr>
+            	    <td><?=$dr_unit['caption']?></td>
+            	</tr></table>
+            	<div class="br_5" style="clear: both;"></div>    
+<?}?>
+             
+            <div class="br_5" style="clear: both;"></div>
+        </div> 
+    </div>
+
+    <div class="tab">
+        <input type="radio" id="tab-6" name="tab-group-1">
+        <label for="tab-6">Developers (Starters)</label>
+     
+        <div class="content">
+            
+<?foreach($developers as $key=>$developer){?>
+                <table><tr>
+            	    <td><?=$developer['caption']?></td>
+            	</tr></table>
+            	<div class="br_5" style="clear: both;"></div>    
+<?}?>
+             
+            <div class="br_5" style="clear: both;"></div>
+        </div> 
+    </div>
+
+    <div class="tab">
+        <input type="radio" id="tab-7" name="tab-group-1">
+        <label for="tab-7">Developer Units</label>
+     
+        <div class="content">
+
+<?foreach($d_units as $key=>$d_unit){?>
+                <table><tr>
+            	    <td><?=$d_unit['caption']?></td>
+            	</tr></table>
+            	<div class="br_5" style="clear: both;"></div>    
+<?}?>
+             
+            <div class="br_5" style="clear: both;"></div>
+        </div> 
+    </div>
+
+    <div class="tab">
+        <input type="radio" id="tab-8" name="tab-group-1">
+        <label for="tab-8">Бункер</label>
+
+        <div class="content">
+
+<?foreach($bynkers as $key=>$bynker){?>
+                <table><tr>
+            	    <td><?=$bynker['description']?></td>
+            	</tr></table>
+            	<div class="br_5" style="clear: both;"></div>    
+<?}?>
+             
+            <div class="br_5" style="clear: both;"></div>
+        </div> 
+    </div>
+
+    <div class="tab">
+        <input type="radio" id="tab-9" name="tab-group-1">
+        <label for="tab-9">Лента</label>
+
+        <div class="content">
+          
+            
+<?foreach($lentas as $key=>$lenta){?>
+                <table><tr>
+            	    <td><?=$lenta['article']?></td>
+<?
+// По значению "$lenta['model_id']" выбираем из табл "tech_models" название модели для данной ленты
+
+$model_id = str_replace(";", "", $lenta['model_id']);
+
+$lenta_model = Napolnyashka::getListFromTableWhere("tech_models", "id", $model_id);
+?>            	    
+            	    <td style="width:7%;"><?=$lenta_model['0']['caption']?></td>
+            	    <td><?=$lenta['description']?></td>
+            	</tr></table>
+            	<div class="br_5" style="clear: both;"></div>    
+<?}?>
+             
+            <div class="br_5" style="clear: both;"></div>
+        </div> 
+    </div>
+    
+</div>
+</tabs>
+
+
+
+
+
+<?//////////////////////////////////////////////////////////////////////////////////////////////////////////////?>

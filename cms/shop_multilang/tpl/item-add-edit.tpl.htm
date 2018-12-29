@@ -1,0 +1,321 @@
+<?SYS::varDump(PAGE_URL,__FILE__,__LINE__,'PAGE_URL');?>
+<script>
+window.openx = "_blank";
+</script>
+
+<span style="font-size:1px">&nbsp;</span>
+<table style="width: 98%;margin:7px 0px;" cellpadding="0" cellspacing="0"><tr><td align="left" style="padding-left:15px;">
+
+<a href="?mod=<?=$mod?>&type=<?=$type?>&com=list&tag=<?=$tag?><?if($display!=""){?>&display=<?=$display?><?}?>"><img src="design/ico_back.gif" style="border: 0px solid rgb(90, 126, 220); cursor: pointer;" title="<?=SHOP_ADMIN_BUTTON_BACK?>" onmouseover="this.style.background='#DBFFC1';" onmouseout="this.style.background=''" class="r10" /></a>
+</td><td align="center" style="padding-left:7px;">
+<a href="?mod=<?=$mod?>&type=<?=$type?>&com=add&tag=<?=$tag?>&id=new<?if($display!=""){?>&display=<?=$display?><?}?>"><img src="design/ico_add_artic.gif" style="border: 0px solid rgb(90, 126, 220); cursor: pointer;" title="<?=SHOP_ADMIN_BUTTON_ADD_NEW?>" onmouseover="this.style.background='#DBFFC1';" onmouseout="this.style.background=''" class="r10" /></a>
+<?$id=$_GET['id'];if($id!=""&&$id!="new"){?></td><td align="center" style="padding-left:7px;"><a href="<?=SITE_URL."/shop/".$tag1_list[substr($tag2_list[substr($item_data["connect"],1,-1)]["connect"],1,-1)]["seolink"]."/".$tag2_list[substr($item_data["connect"],1,-1)]["seolink"]."/".$item_data["id"]."-".$item_data["seolink"].""?>" title="<?=SHOP_ADMIN_BUTTON_VIEW_ONLINE?>" target="_blank"><img src="design/internet.gif" style="border: 0px solid rgb(90, 126, 220); width:48px;" title="<?=SHOP_ADMIN_BUTTON_VIEW_ONLINE?>" onmouseover="this.style.background='#DBFFC1';" onmouseout="this.style.background=''" class="r10" /></a><?}?>
+</td><td align="center" style="padding-left:7px;">
+<a href="javascript:void(0)" onclick="addEdit.submit();"><img src="design/ico_save.gif" style="border: 0px solid rgb(90, 126, 220); cursor: pointer;" title="<?=SHOP_ADMIN_BUTTON_SAVE?>" onmouseover="this.style.background='#DBFFC1';" onmouseout="this.style.background=''" class="r10" /></a>
+</td><td align="center" width="95%" style="padding-left:7px;">
+	<div style="margin:10px;"><?include SITE_PATH."/cms/lang/tpl/lang_switch.tpl.htm";?></div>
+<?if($cmd=="update"||$_GET['save']=="ok"){?><b style="color:forestgreen;font-size:13px;"><?=SHOP_ADMIN_NOTE_SAVED?></b><br><?=date("H:i:s d-m-Y")?><?}?>&nbsp; 
+</td><td class="heading1" align="right" valign="bottom">	
+<nobr><span style="color:#e7e7e7;font-size:24px;"><?=SHOP_NAME?></span></nobr><br>
+
+<!-- ====================================== -->
+<?
+$param_list = ShopItem::getParam($item_data[param_connect],";");
+$param_1 = ($param_list[0]['value1'] != "") ? "-".$param_list[0]['value1'] : "";
+$param_2 = ($param_list[1]['value1'] != "") ? $param_list[1]['value1']."-" : "";
+$article = $param_2.$item_data['article'].$param_1;
+SYS::varDump($item_data,__FILE__,__LIST__,"Param_list");
+?>
+
+<!--<nobr><span style="color:#444;">Карточка товара  : </span># <?//=$item_data['id']!=''?$item_data['id']:'NEW'?></nobr>-->
+<nobr><span style="color:#444;"><?=SHOP_ADMIN_NOTE_ITEM_CARD?> (id <?=$item_data['id']?>)  : </span> <?=$article!=''?$article:'NEW'?></nobr>
+
+<!-- ====================================== -->
+</tr>
+</table>
+
+<div align="center">
+  <div style="padding:0px 12px 12px 20px;max-width:890px;min-height:500px;" align="left">
+    <form name="addEdit" method="post" action="<?=SITE_URL?>/cms/?<?=getenv("QUERY_STRING")?>">  
+
+<fieldset class="pole">
+<legend>&nbsp;&nbsp;Поставщик :&nbsp;&nbsp;Внимание!! Если поставщик mkr или пустое поле, "Цена" = "Цена магазина"</legend>
+<input type="text" name="postavschik" id="postavschik" maxlength="100" style="width:90%;font-size: 15px;font-weight: normal;line-height: 17px;margin-bottom:15px" value="<?=$item_data["postavschik"]?>">
+</fieldset>
+	
+      <fieldset class="pole">
+        <legend>&nbsp;&nbsp;<?=SHOP_ADMIN_NOTE_CAPTION?> :&nbsp;&nbsp;</legend>
+        <input type="text" name="caption" id="caption" maxlength="250" style="padding:5px 7px;width:98%;font-size: 22px;font-weight: normal;line-height: 25px;font-family:verdana" value="<?=$item_data['caption']?>">
+      </fieldset>
+      <input type="hidden" name="cmd" value="<?=$item_data['id']!=''?'update':'insert'?>">
+      <input type="hidden" name="pos" value="<?=$item_data['pos']?>">
+      <input type="hidden" name="connect" value="<?=$item_data['connect']?>">
+
+      <table style="width:100%" cellpadding="0" cellspacing="0"><tr>
+        <td valign="top" style="width:422px;padding-right:0px;">
+          <fieldset class="pole">
+            <legend>&nbsp;&nbsp;<?=SHOP_ADMIN_NOTE_IMAGE?> :&nbsp;&nbsp;</legend>
+<?
+
+if(file_exists(SITE_PATH."/userfiles/product-image/".$item_data["1Cid"].".jpg")){
+		    $img1="/userfiles/product-image/".$item_data["1Cid"].".jpg";
+		}
+		else{
+		    $img1="/image/".$mod."/".$type."/".$item_data['id']."/1m.png";
+		}
+
+//$img1="/image/".$mod."/".$type."/".$item_data['id']."/1m.png";
+$img2="/image/".$mod."/".$type."/".$item_data['id']."/2s.png";
+$img3="/image/".$mod."/".$type."/".$item_data['id']."/3s.png";
+$img4="/image/".$mod."/".$type."/".$item_data['id']."/4s.png";
+$img5="/image/".$mod."/".$type."/".$item_data['id']."/5s.png";
+
+if(!file_exists(getenv("DOCUMENT_ROOT").$img1))$img1="/design/img/noimage_740x480.png";
+if(!file_exists(getenv("DOCUMENT_ROOT").$img2))$img2="/design/img/noimage_740x480.png";
+if(!file_exists(getenv("DOCUMENT_ROOT").$img3))$img3="/design/img/noimage_740x480.png";
+if(!file_exists(getenv("DOCUMENT_ROOT").$img4))$img4="/design/img/noimage_740x480.png";
+if(!file_exists(getenv("DOCUMENT_ROOT").$img5))$img5="/design/img/noimage_740x480.png";
+?>
+            <div class="image">
+              <a href="javascript:onWhiteSlimbox('/cms/<?=$mod?>/magic/load_prod_image.php?img=/image/<?=$mod?>/<?=$type?>/<?=$id?>/1.png&prodid=<?=$id?>&numer=1')" title="<?=SHOP_ADMIN_NOTE_EDIT_IMAGE?> #1"><img id="prodimg1" alt="" src="<?=$img1?>?<?=time()?>" width="421" height="275" border="0" /></a>
+            </div>
+           <div class="image" style="margin:7px 0px;">
+             <a href="javascript:onWhiteSlimbox('/cms/<?=$mod?>/magic/load_prod_image.php?img=/image/<?=$mod?>/<?=$type?>/<?=$id?>/2.png&prodid=<?=$id?>&numer=2')" title="<?=SHOP_ADMIN_NOTE_EDIT_IMAGE?> #2"><img id="prodimg2" src="<?=$img2?>?<?=time()?>" width="100" height="65" border="0" style="margin-right:2px;" /></a>
+             <a href="javascript:onWhiteSlimbox('/cms/<?=$mod?>/magic/load_prod_image.php?img=/image/<?=$mod?>/<?=$type?>/<?=$id?>/3.png&prodid=<?=$id?>&numer=3')" title="<?=SHOP_ADMIN_NOTE_EDIT_IMAGE?> #3"><img id="prodimg3" src="<?=$img3?>?<?=time()?>" width="100" height="65" border="0" style="margin-right:2px;" /></a>
+             <a href="javascript:onWhiteSlimbox('/cms/<?=$mod?>/magic/load_prod_image.php?img=/image/<?=$mod?>/<?=$type?>/<?=$id?>/4.png&prodid=<?=$id?>&numer=4')" title="<?=SHOP_ADMIN_NOTE_EDIT_IMAGE?> #4"><img id="prodimg4" src="<?=$img4?>?<?=time()?>" width="100" height="65" border="0" style="margin-right:2px;" /></a>
+             <a href="javascript:onWhiteSlimbox('/cms/<?=$mod?>/magic/load_prod_image.php?img=/image/<?=$mod?>/<?=$type?>/<?=$id?>/5.png&prodid=<?=$id?>&numer=5')" title="<?=SHOP_ADMIN_NOTE_EDIT_IMAGE?> #5"><img id="prodimg5" src="<?=$img5?>?<?=time()?>" width="100" height="65" border="0" /></a>
+           </div>
+         </fieldset>
+         <fieldset style="">
+           <legend>&nbsp;&nbsp;<b><?=SHOP_ADMIN_NOTE_GOOD_PRICE_SALE?>:</b>&nbsp;&nbsp;</legend>
+           <div align="center">
+             <label><input type="checkbox"<?if($item_data["good_price"]==1){?> checked=""<?}?> value="1" name="good_price">&nbsp;<?=SHOP_ADMIN_NOTE_GOOD_PRICE?>&nbsp;</label>&nbsp;&nbsp;
+             <label><input type="checkbox"<?if($item_data["sell_out"]==1){?> checked=""<?}?> value="1" name="sell_out">&nbsp;<?=SHOP_ADMIN_NOTE_SALE?>&nbsp;</label>&nbsp;&nbsp;
+             <label><input type="checkbox"<?if($item_data["on_main"]==1){?> checked=""<?}?> value="1" name="on_main">&nbsp;<?=SHOP_ADMIN_NOTE_ON_MAIN?>&nbsp;</label>&nbsp;&nbsp;
+           </div>
+         </fieldset> 
+        <fieldset class="pole">
+            <legend>&nbsp;&nbsp;<b>Брэнд:</b>&nbsp;&nbsp;</legend>
+            <input type="text" name="brand" id="brand" maxlength="100" style="width:98%;font-size: 15px;font-weight: normal;line-height: 17px;margin-bottom:15px" value="<?=$item_data["brand"]?>">
+        </fieldset>
+		 
+       </td>
+       <td valign="top" style="padding-left:7px;">
+
+<style>
+.select{position:relative;width:100px;height:20px;background:#fff;border:0px solid #bbb;z-index:1;}
+.select > span{display:block;width:100px;height:20px;text-align:center;vertical-align:middle;cursor:pointer;}
+.select_{display:none;position:absolute;padding-right:20px;max-height:500px;background:#fff;border:1px solid #bbb;overflow:auto;}
+.select_ > div{white-space:nowrap}
+.select:hover{z-index:100;}
+.select:hover > .select_{display:block;}
+</style>
+<?
+$pid=explode(";",substr($item_data["connect"],1,-1));
+$count_pid = count($pid);
+$tag2_select_list=ShopTag::tagListSort();
+?>
+         <div class="select">
+	   <nobr><span><?=SHOP_ADMIN_NOTE_CATEGORY?> : (<?=$count_pid?>)</span></nobr>
+	   <div class="select_">
+<?
+foreach ($tag2_select_list as $key=>$val){
+    if($item_data["connect"]==''){
+        $parent_tag=$_GET['tag'];
+        if($parent_tag==$val['id']){
+            $check = "checked";
+        }
+        else{
+            $check = "";
+        }
+     }
+     else{
+         $con = strrpos($item_data["connect"],";{$val['id']};");
+         if($con === false){
+             $check = "";
+         }
+         else{
+             $check = "checked";
+         }      
+     }
+?>    
+           <div><input name="connect[]"  type="checkbox"  value="<?=$val['id']?>" <?=$check?> ><?=$val['caption']?></div>
+<?}?>
+         </div>
+       </div>
+	   
+
+	   
+       <fieldset class="pole">
+         <legend>&nbsp;&nbsp;<?=SHOP_ADMIN_NOTE_CHARACTERISTIC?> :&nbsp;&nbsp;</legend>
+         <textarea name="desc_short" cols="145" rows="135"><?=$item_data["desc_short"];?></textarea>
+
+<script type="text/javascript">
+CKEDITOR.replace( 'desc_short',{
+//      toolbar : 'Basic'
+   toolbar : 'Medium'
+//     toolbar : 'Default'
+});
+</script>
+</fieldset>
+
+
+<table cellspacing="0" cellpadding="0" width=""><tr><td width="255px;" valign="bottom">
+ <fieldset class="pole">
+ <?$shop_setting=$GLOBALS["shop_setting"];?>
+<legend>&nbsp;&nbsp;<?=SHOP_ADMIN_NOTE_COURSE?> (1 <?=CURRENCY_1?> = <?=$shop_setting[0]['value']?> <?=CURRENCY?> = <?=$shop_setting[0]['value']?> <?=CURRENCY_2?>.) :&nbsp;&nbsp;</legend>
+ <table cellspacing="0" cellpadding="0" style="margin:0px 4px 10px 4px;"><tr><td valign="bottom" style="padding:4px 4px 4px 4px;">
+ <span style="font-size:15px;color:red;"><b><?=SHOP_ADMIN_NOTE_PRICE?>:</b></span>
+ </td><td>
+ <input type="text" name="price_diler" id="price_diler" maxlength="10" style="width:100px;height:24px;margin: 0 4px 0px 4px;font-size: 22px;font-weight: normal;line-height: 22px;font-family:verdana" value="<?=$item_data["price_diler"]?>">
+ </td><td valign="bottom" style="padding:4px 4px 4px 4px;">
+</td></tr></table> 
+
+ <table cellspacing="0" cellpadding="0" style="margin:0px 4px 10px 4px;"><tr><td valign="bottom" style="padding:4px 4px 4px 4px;">
+ <span style="font-size:15px;color:red;"><b><?=SHOP_ADMIN_NOTE_SHOP_PRICE?>:</b></span>
+ </td><td>
+ <div style="height:24px;margin: 0 4px 0px 4px;font-size: 22px;font-weight: normal;line-height: 22px;font-family:verdana">
+ <?echo $price_roznica = Price::getPrice($item_data['postavschik'],$item_data['price_roznica'],$item_data['price_diler'],$item_data['p1']);?>
+ </div>
+ </td><td valign="bottom" style="padding:4px 4px 4px 4px;">
+<?=CURRENCY?>
+</td></tr></table> 
+
+
+</fieldset>
+</td><td style="padding-left:7px;">
+<?
+if($item_data["nalichie"] == "+"){
+    $bg_nalicie = "green";
+}
+elseif ($item_data["nalichie"] == "-"){
+    $bg_nalicie = "red";
+}
+elseif ($item_data["nalichie"] == "arch"){
+    $bg_nalicie = "#ccc";
+}
+else{
+    $bg_nalicie = "yellow";
+}
+?>
+<fieldset class="pole" style="background-color:<?=$bg_nalicie?>;">
+<legend>&nbsp;&nbsp;<?=SHOP_ADMIN_NOTE_AVAILABILITY?> :&nbsp;&nbsp;</legend>
+<input type="text" name="package" id="package" maxlength="100" style="width:90%;font-size: 15px;font-weight: normal;line-height: 17px;margin-bottom:15px" value="<?=$item_data["nalichie"]?>">
+</fieldset>
+
+<fieldset class="pole">
+<legend>&nbsp;&nbsp;Гарантия :&nbsp;&nbsp;</legend>
+<input type="text" name="garantiya" id="garantiya" maxlength="100" style="width:90%;font-size: 15px;font-weight: normal;line-height: 17px;margin-bottom:15px" value="<?=$item_data["garantiya"]?>">
+</fieldset>
+</td></tr></table>
+
+
+<fieldset class="pole">
+<legend>&nbsp;&nbsp;<?=SHOP_ADMIN_NOTE_SHOW?> :&nbsp;&nbsp;</legend>
+<div style="margin-bottom:0px;">&nbsp;
+<!--<label><input name="flagman" type="checkbox"<?if ($item_data['flagman']==1){?> checked="checked"<?}?> value="1" />&nbsp;<?=SHOP_ADMIN_NOTE_FLAGSHIP?>&nbsp;</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+<label><input name="showing" type="checkbox"<?if ($item_data['showing']==1||$com=='add'){?> checked="checked"<?}?> value="1" />&nbsp;<?=SHOP_ADMIN_NOTE_SHOW_ONLINE?>&nbsp;</label>
+
+</div> 
+
+</fieldset>
+ 
+<fieldset class="pole">
+<legend>&nbsp;&nbsp;Manual :&nbsp;&nbsp;</legend>
+<div style="margin-bottom:0px;">&nbsp;
+<label><input name="p5" type="checkbox"<?if ($item_data['p5']==1||$com=='add'){?> checked="checked"<?}?> value="1" />&nbsp;Не менять при обновлении прайса&nbsp;</label>
+
+</div> 
+
+</fieldset>
+ 
+</td></tr></table>
+
+<fieldset class="pole">
+<legend>&nbsp;&nbsp;<?=SHOP_ADMIN_NOTE_SHOP_CODE?> :&nbsp;&nbsp;(<?=SHOP_ADMIN_NOTE_SHOP_CODE_ATTANTION?>)&nbsp;&nbsp;</legend>
+<input type="text" name="article" id="article" maxlength="100" style="width:98%;font-size: 15px;font-weight: normal;line-height: 17px;margin-bottom:15px" value="<?=$item_data["article"]?>">
+</fieldset>
+
+<?// **************** Фильтры  ?>
+<?include SITE_PATH."/cms/shop/tpl/inc/block-filter_item-add-edit.php"?>
+<?// **************** /Фильтры  ?>
+<?// **************** Параметры  ?>
+<?//include SITE_PATH."/cms/shop/tpl/inc/block-param_item-add-edit.php"?>
+<?// **************** /Параметры  ?>
+<?// **************** Отрасли применения  ?>
+<?//include SITE_PATH."/cms/shop/tpl/inc/block-branch_item-add-edit.php"?>
+<?// **************** /Отрасли применения  ?>
+<?// **************** Галерея  ?>
+<?//include SITE_PATH."/cms/shop/tpl/inc/block-gallery_item-add-edit.php"?>
+<?// **************** /Галерея  ?>
+<?// **************** Опции (Сопутствующие товары)  ?>
+<?include SITE_PATH."/cms/shop/tpl/inc/block-companion_item-add-edit.php"?>
+<?// **************** /Опции (Сопутствующие товары)  ?>
+
+<table style="width:98%;" cellpadding="0" cellspacing="0"><tr><td align="left" style="width:50%;padding-left:15px;">
+</td><td align="right">
+<a href="javascript:void(0)" onclick="addEdit.submit();"><img src="design/ico_save.gif" style="cursor: pointer;" title="<?=SHOP_ADMIN_BUTTON_SAVE?>" onmouseover="this.style.background='#DBFFC1';" onmouseout="this.style.background=''" class="r10" /></a>
+</td></tr></table>
+
+
+
+
+<fieldset class="pole">
+<legend>&nbsp;&nbsp;<?=SHOP_ADMIN_NOTE_FULL_DESCRIPTION?> :&nbsp;&nbsp;</legend>
+<textarea name="desc_full" id="desc_full" cols="145" rows="135"><?=$item_data["desc_full"];?></textarea>
+
+<script type="text/javascript">
+CKEDITOR.replace( 'desc_full',{
+//    toolbar : 'Basic'
+//    toolbar : 'Medium'
+    toolbar : 'Default'
+});
+</script>
+</fieldset>
+<!--
+<fieldset class="pole">
+<legend>&nbsp;<?=SHOP_ADMIN_NOTE_PRESENT?> :&nbsp;</legend>
+<input name="p6" value="<?//=$item_data['p6']?>" type="text" style="width:98%">
+</fieldset>
+-->
+<fieldset class="pole">
+<legend>&nbsp;Seo Link :&nbsp;</legend>
+<input name="seolink" value="<?=$item_data['seolink']?>" type="text" style="width:98%">
+</fieldset>
+
+<fieldset class="pole">
+<legend>&nbsp;Meta Title :&nbsp;</legend>
+<input name="meta_t" value="<?=$item_data['meta_t']?>" type="text" style="width:98%">
+</fieldset>
+
+<fieldset class="pole">
+<legend>&nbsp;Meta Keywords :&nbsp;</legend>
+<input name="meta_k" value="<?=$item_data['meta_k']?>" type="text" style="width:98%">
+</fieldset>
+
+<fieldset class="pole">
+<legend>&nbsp;Meta Description :&nbsp;</legend>
+<textarea name="meta_d" style="padding:7px;height:40px;width:98%;"><?=$item_data['meta_d']?></textarea>
+</fieldset>
+
+
+
+</form>	
+
+<br>
+
+
+<table style="width:98%;" cellpadding="0" cellspacing="0"><tr><td align="left" style="width:60px;;padding-left:15px;">
+<a href="?mod=<?=$mod?>&com=delete&id=<?=$item_data['id']?><?if($display!=""){?>&display=<?=$display?><?}?>" onclick="if (confirm('<?=SHOP_ADMIN_NOTE_ATTANTION_DELETE?>?')) location=this.href; return false;"><img src="design/icon-delete.gif" style="cursor: pointer;" title="<?=SHOP_ADMIN_BUTTON_DELETE?>" onmouseover="this.style.background='#DBFFC1';" onmouseout="this.style.background=''" class="r10" /></a>
+</td><td align="left">
+<b>id:</b> <?=$item_data['id']?>
+</td><td align="right">
+<a href="javascript:void(0)" onclick="addEdit.submit();"><img src="design/ico_save.gif" style="cursor: pointer;" title="<?=SHOP_ADMIN_BUTTON_SAVE?>" onmouseover="this.style.background='#DBFFC1';" onmouseout="this.style.background=''" class="r10" /></a>
+</td></tr></table>
+
+</div></div>
+
+<br><br><br>
+
+
+

@@ -1,0 +1,121 @@
+<div style="border-bottom:1px solid #000;"></div>
+<table style="width: 100%;margin-bottom:3px;" cellpadding="0" cellspacing="0">
+    <tr>
+        <td align="center">
+		    <h1>Напоминалка</h1>
+		    <div style="text-align:justify;padding:15px;">Данный модуль предназначен для создания "Напоминаний".<br />
+			    Для создания "Напоминания" необходимо ткнуть иконку "Листик с зеленым плюсиком" и заполнить необходимые поля..<br />
+				После создания "Напоминания", в верхнем баре, начинает неистово мигать иконка, кричащая Вам о том, что у Вас есть необработанные записи..<br />
+				После обработки "Напоминания", нужно ткнуть кнопочку "В архив" и запись пропадет из списка..<br />
+				Если список "Напоминаний" пуст - вместо мигающей иконки Вы с удивлением обнаружите картинку "Будильник"..<br /><br />
+				Если Вы отправили сообщение нескольким получателям, то в колонке "Получатели" они будут обведены красной 
+				(если получатель не отправил сообщение в архив) либо зеленой (если получатель отправил сообщение в архив) каемкой..<br /><br />
+				Всегда Ваш You..<br /><br />
+			</div>
+
+		</td>
+    </tr>
+	<tr>
+        <td align="left">
+<?if (isset($category_id)){?>
+            <a onclick="javascript:history.back();"><img src="design/ico_back.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Назад" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''"></a> <?}?>
+            <a href="?mod=<?=$mod?>&com=add"><img src="design/ico_add_artic.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Добавить статью в эту категорию" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''"></a>
+        </td>
+    </tr>
+</table>
+
+<form  action="" name="re_massiv" id="reminder_massiv" method="post" enctype="multipart/form-data" >
+    <input type="hidden" id="reminder_massiv_action" name="reminder_massiv_action" value="" />
+<?if ($art_data!=''){
+$c_list = count($art_data);
+?>
+    <div class="both br_5"></div> 
+	  <table style="width:100%;">
+		<tr style="padding:5px;">
+			<td style="border:1px solid #ccc;width:25px;padding:2px;">№</td>
+			<td style="border:1px solid #ccc;width:150px;padding:2px;">Дата</td>
+			<td style="border:1px solid #ccc;width:75px;padding:2px;">Отправитель</td>
+			<td style="border:1px solid #ccc;width:50px;padding:2px;">Получатели</td>
+			<td style="border:1px solid #ccc;width:350px;padding:2px;">Тема</td>
+			<td style="border:1px solid #ccc;width:550px;padding:2px;">Сообщение</td>
+			<td style="border:1px solid #ccc;width:50px;padding:2px;"></td>
+		</tr>
+    <?$i=1;?>
+    <?foreach($art_data as $key=>$val){?>
+
+        <tr style="border:1px solid #ccc;padding:5px;">
+			<td style="border:1px solid #ccc;width:25px;padding:2px;"><?=$val['id']?></td>
+			<td style="border:1px solid #ccc;width:150px;padding:2px;"><?=$val['date_create']?></td>
+			<td style="border:1px solid #ccc;width:75px;padding:2px;"><img src="/image/user/item/<?=$val['author']?>/1s.png" style="width:40px;" class="r5" alt="<?=$_SESSION['user_short_caption']?>" title="<?=$_SESSION['user_short_caption']?>" /></td>
+<!--			<td><?=$val['author']?></td> -->
+			<td style="border:1px solid #ccc;width:50px;padding:2px;">
+                <table>
+					<tr>
+<?
+        if($val['connect'] !== ""){
+             $poluchateli_id_array = explode(";",$val['connect']); // Получаем всех получателей
+             $i = "0";
+             foreach($poluchateli_id_array as $k => $v){
+			    if($v == $val['author']){unset($v);} // Удаляем отправителя из списка получателей
+                if(isset($v) && $v !== ""){
+                    
+                    $i++;
+                    $ostatok=($i%4);
+                    if($ostatok == 0){$tr = "<tr>";}else{$tr = "";} 
+?>		
+<?
+$clever_poluchatel['archiv'] = Reminder::getStatusForOtherUser($val['id'],$v); // Проверка, прочитал ли получатель сообщение (точнее, отправил ли он напоминание в архив)
+
+if($clever_poluchatel['archiv'] !== 0){ // Получатель ознакомился и отправил сообщение в архив
+    $border_color = "#008000";
+    $poluchatel_hint = "Ознакомился и отправил в архив..";
+}
+else{                                   // Получатель не отправил сообщение в архив
+    $border_color = "#d91219";
+    $poluchatel_hint = "Игнорит Вас.. Редиска..";
+}
+?>
+						<td style="padding:2px;">
+				             <img src="/image/user/item/<?=$v?>/1s.png" style="width:40px;padding:0px;border:3px solid <?=$border_color?>;" class="r5" alt="<?=$poluchatel_hint?>" title="<?=$poluchatel_hint?>"  />
+                        </td>
+						<?=$tr?>
+<?
+        		}
+			}
+		}
+?>
+						</tr>
+					</table> 
+			</td>
+			<td style="border:1px solid #ccc;width:350px;padding:2px;"><?=$val['caption']?></td>
+			<td style="border:1px solid #ccc;width:550px;padding:2px;"><?=$val['content']?></td>
+			<td style="border:1px solid #ccc;width:50px;padding:2px;">
+<?
+
+if($val['connect'] !== ""){
+    $poluchateli_id_array = explode(";",$val['connect']);
+
+    $count_poluchateli_id_array = count($poluchateli_id_array); // Считаем, сколько получателей, включая себя
+    $output = array_slice($poluchateli_id_array, 2, $count_poluchateli_id_array - 1); // Оставляем массив всех получателей, кроме себя
+    $aaa = implode(";",$output); // Формируем строку типа id;id;id; из id-шек получателей
+    $poluchateli_id_array_without_me = ";".$aaa; // Добавляем ; в начало строки
+
+    $clever_poluchatel['archiv'] = Reminder::getArchivById($val['id']);
+
+//SYS::varDump($clever_poluchatel,__FILE__,__LINE__,"clever_poluchatel");
+//SYS::varDump($poluchateli_id_array_without_me,__FILE__,__LINE__,"poluchateli_id_array_without_me");
+
+?>
+            <a title="В архив" href="?mod=reminder&com=archiv&resultat=y&id=<?=$val['id']?>" onclick="if (confirm('Вы уверены, что хотите отправить запись в архив?')) location=this.href; return false;">
+            <img src='design/icons_archive.gif' alt='В архив' vspace='1' border='0' hspace='1' width='30'></a>
+<?
+}  
+?>				
+				
+			</td>	
+		</tr>
+
+    <?}?>
+<?}?>
+	</table>	  
+</form>

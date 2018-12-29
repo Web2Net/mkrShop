@@ -1,0 +1,304 @@
+<style>
+    .right{
+	    float:right;
+	}
+	.left{
+	    float:left;
+	}
+	.both{
+	    clear:both;
+	}
+
+    .wrap_works_filter_butt{
+	    padding:5px;
+	}
+	.works_filter_butt{
+	    border: 1px solid #000;
+		padding:5px;
+	}
+	
+	.wrap_user_panel{
+	    text-align:center;
+		padding:1px;
+		vertical-align:top;
+	}
+	.user_panel_butt{
+	    border:1px solid #ccc;
+		margin:2px; padding:2px;
+		width:70px; height:65px;
+	}
+</style>
+<table>
+    <tr>
+	    <td>
+		    <a onclick="javascript:history.back();">
+                <img src="design/ico_back.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Назад" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''">
+            </a>
+		</td>
+	    <td>
+		    <a href="javascript:void(0)" onclick="articleForm.submit();">
+                <img src="design/ico_save.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Сохранить" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''">
+            </a>
+		</td>
+	</tr>
+</table>
+<div class="both br_5"></div>
+<?if ($upd=='ok'){?><div class="ok both br_5"><b>Данные обновлены</b></div><?}?>
+
+<div class="both br_5"></div>
+<?include SITE_PATH."/cms/works/tpl/works_buttons_filter.php"?>
+<div class="both br_5"></div>
+
+<table style="width:100%">
+    <tr>
+	    <td style="padding-left:10px;">
+<?//////////// UPLOAD FILES ///////////////////?>
+<?
+$item_dir = "/userfiles/works/";
+$upload_dir = SITE_PATH.$item_dir;
+$doc_dir = $art_data['id'];
+$full_dir = $upload_dir.$doc_dir;
+?>
+<form action="" method="POST" enctype="multipart/form-data">
+        <input type="file" name="uploadfile">
+        <input type="submit" name="up_file" value="Загрузить"></form>
+</form>
+<?
+if($_POST['up_file']){
+    @mkdir($upload_dir.$doc_dir, 0777); // создаем папку, если ее нет то ошибки не будет, задаем права
+
+    /*echo "<pre>";
+    print_r($_FILES);
+    echo "</pre>";*/
+    //$uploaddir = $upload_dir.'/';
+    $uploadfile = $full_dir."/".basename($_FILES['uploadfile']['name']);
+
+    if(copy($_FILES['uploadfile']['tmp_name'], $uploadfile)){
+        echo "<h3>Файл успешно загружен на сервер</h3>";
+    }
+	else{
+        echo "<h3>Не удалось загрузить файл на сервер</h3>";
+        exit;
+    }
+    //Данные о загруженном файле
+/*
+    echo "<h3>Информация о загруженном на сервер файле: </h3>";
+    echo "<p>Оригинальное имя загруженного файла:<b> ".$_FILES['uploadfile']['name']."</b></p>";
+    echo "<p>Mime-тип загруженного файла:<b> ".$_FILES['uploadfile']['type']."</b></p>";
+    echo "<p>Размер загруженного файла в байтах:<b> ".$_FILES['uploadfile']['size']."</b></p>";
+    echo "<p>Временное имя файла: <b>".$_FILES['uploadfile']['tmp_name']."</b></p>";
+*/
+}
+?>
+
+<?php
+SYS::varDump($_POST,__FILE__,__LINE__,"POST");
+
+
+
+
+if($com !== "add"){
+$dir  = $full_dir;
+$files = scandir($dir);
+foreach ($files as $file){
+
+
+
+    if($file == "." || $file == ".."){}
+	else{
+	
+
+$deleting_file = SITE_PATH . $item_dir . $doc_dir ."/". $file;	
+
+
+
+	
+	?>
+		<nobr><a href='<?=$item_dir?><?=$doc_dir?>/<?=$file?>' style='color:blue;' target='_blank'><?=$file?></a>
+<?if($_SESSION['user_level'] >= 7){?>
+		<form action="" method="post">
+                   <input type="hidden" name="del_file" value="<?=$deleting_file?>" />
+                   <input type="submit" value="удалить" />
+                </form>
+<?}?>
+		</nobr>
+		
+		 <br />
+	<?}
+    
+}
+}
+?>
+<?//////////// /UPLOAD FILES ///////////////////?>
+		</td>
+<?		
+$create = explode(" ",$art_data['date_create']);
+$create_date = $create['0'];
+$create_author = $create['1'];
+?>		
+<?
+// Линк на страничку клиента
+$client_page_link = "?mod=user&type=item&com=edit&tag=8&id=".$art_data['client_id']."";
+?>
+	    <td class="heading1">
+		<span class="right" style="color:#ccc;font-size:28px; align:right;">Заявка № <?=$art_data['id']?></span><br />
+                <span class="right"><a href="<?=$client_page_link?>" target="_blank"><?=$art_data['client']?></a></span><br />
+		<span class="right" style="color:#ccc;font-size:14px; align:right;"><?=$create_date?> :: <?=ucfirst($create_author)?></span>
+	    </td>
+	</tr>
+</table>
+<hr />
+
+<form action="?mod=<?=$mod?>&type=<?=$type?>&com=update<?=isset($id)?"&id=".$id:""?>" method="post" name="articleForm">
+    <input name="form__id" value="<?=$art_data['id']?>" type="hidden">
+<?
+if($art_data['ingener'] == ""){$ingener = $_SESSION['user_login'];}
+else{$ingener = $art_data['ingener'];}
+?>
+    <input name="form__ingener" value="<?=$ingener?>" type="hidden">	
+
+	<table>
+	    <tr style="vertical-align:top;">
+		    <td>
+<?if($_REQUEST['com'] == "edit"){$date = $art_data['date_create'];}else{$date = date("Y-m-d")." ".$_SESSION['user_login'];}?>
+    <fieldset class="pole">
+        <legend>&nbsp;&nbsp;Заявка получена :&nbsp;&nbsp;</legend>
+        <input name="form__date_create" class="adminform" value="<?=$date?>" type="text" />
+    </fieldset>
+	        </td>
+<!--			
+            <td>
+<?if ($art_data['prioritet']=='Y'){$bg = "#fd7c7c";}else{$bg = "#fff";}?>	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Срочняковая :&nbsp;&nbsp;</legend>
+        <div style="margin-bottom:0px;background-color:<?=$bg?>">
+		    <label><input name="form__prioritet" type="checkbox" <?if ($art_data['prioritet']=='Y'){?> checked=""<?}?>value="Y" /></label>
+		</div>
+    </fieldset>
+	        </td>
+-->			
+			<td style="text-align:left">
+<?if ($art_data['nal']=='Y'){$chk_w = "";$chk_n = "checked =''";$chk_b = "";$chk_z = "";}
+elseif($art_data['nal']=='W'){$chk_w = "checked =''";$chk_b = "";$chk_n = "";$chk_z = "";}
+elseif($art_data['nal']=='Z'){$chk_z = "checked =''";$chk_b = "";$chk_n = "";$chk_w = "";}
+else{$chk_w = "";$chk_b = "checked =''";$chk_n = "";$chk_w = "";}?> 
+	<fieldset class="pole">
+            <legend>&nbsp;&nbsp;Форма оплаты :&nbsp;&nbsp;</legend>
+            <input type="radio" name="form__nal" value="N" <?=$chk_b?>>&nbsp;Безнал<br />
+            <input type="radio" name="form__nal" value="Y" <?=$chk_n?>>&nbsp;Нал<br />
+	    <input type="radio" name="form__nal" value="W" <?=$chk_w?>>&nbsp;Гарантийный<br />
+	    <input type="radio" name="form__nal" value="Z" <?=$chk_z?>>&nbsp;Шаровой<br />
+    </fieldset>		
+			</td>
+			<td>
+<?if ($art_data['viezd']=='Y'){$viezd_y = "checked =''";$viezd_n = "";}else{$viezd_n = "checked =''";$viezd_y = "";}?> 
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Где производились работы :&nbsp;&nbsp;</legend>
+        <input type="radio" name="form__viezd" value="N" <?=$viezd_n?>>В сервисе<br />
+        <input type="radio" name="form__viezd" value="Y" <?=$viezd_y?>>На выезде<br />
+    </fieldset>		
+			</td>
+		</tr>
+	</table>
+<?
+if(isset($art_data['id']) && $art_data['id'] !== ""){
+    include SITE_PATH."/cms/works/tpl/works_button_panel.php"; // Кнопки выполненных работ, выписки доков и прочие..}
+}
+else{
+    include SITE_PATH."/cms/works/tpl/works_button_panel_2.php"; // Чекбоксы выполненных работ, выписки доков и прочие..
+}?>	
+	
+	
+	
+	
+<!--	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Клиент :&nbsp;&nbsp;</legend>
+        <input name='form__client' class='adminform' style="font-size:28px;width:98%;border:1px solid #ccc;" value="<?=$art_data['client']?>" type="text" />
+    </fieldset>
+-->
+<?
+if($art_data['client_id'] !== "0"){
+    $cli_id = $art_data['client_id'];
+    $client_data = Works::getClients($cli_id);
+    $client_name = $client_data['short_caption'];
+    $client_edrpoy = $client_data['edrpoy'];
+}else{
+    $cli_id = "";
+    $client_name = $art_data['client'];
+}
+?>
+
+	<fieldset class="pole">
+	    <legend>&nbsp;&nbsp;Клиент :&nbsp;&nbsp;</legend>
+	<?// search client?>
+				    <div id="_wrap_search">
+                        <div class="search">
+                            <div class="ui-widget" style="padding-top:7px;">
+
+                <!--<label for="tags"></label>-->
+                                    <input id="tags" placeholder="Кодовое имя клиента.." type="text" value="<?=$client_name?>" name="form__client" class="search"  style="width:98%;border:1px solid #ccc;" />
+<!--                                    <input id="butt_create_works" type="submit" value="Создать" />  -->
+
+                            </div>
+                        </div> 
+	                </div>
+<?// /search client?>
+    </fieldset>
+<!--	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Контактная инфа :&nbsp;&nbsp;</legend>
+        <input name='form__data_client' class='adminform' style="width:98%;" value="<?=$art_data['data_client']?>" type="text" />
+    </fieldset>
+-->	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Дивайс :&nbsp;&nbsp;</legend>
+        <input name='form__divice' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['divice']?>" type="text" />
+    </fieldset>
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;S/N :&nbsp;&nbsp;</legend>
+        <input name='form__sn' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['sn']?>" type="text" />
+    </fieldset>
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Неисправность :&nbsp;&nbsp;</legend>
+        <textarea name="form__neispravnost" id="form__neispravnost" style="width:98%;border:1px solid #ccc;" rows="5"><?=$art_data["neispravnost"];?></textarea>
+<!--
+        <script type="text/javascript">
+            CKEDITOR.replace( 'neispravnost',{
+            //    toolbar : 'Basic'
+            //    toolbar : 'Medium'
+                toolbar : 'Default'
+            });
+        </script>
+-->
+    </fieldset>
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Что сделано :&nbsp;&nbsp;</legend>
+        <textarea name="form__content" id="form__content" style="width:98%;border:1px solid #ccc;" rows="5"><?=$art_data["content"];?></textarea>
+<!--
+        <script type="text/javascript">
+            CKEDITOR.replace( 'content',{
+                toolbar : 'Basic'
+            //    toolbar : 'Medium'
+            //    toolbar : 'Default'
+            });
+        </script>
+-->		
+    </fieldset>
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Примечание :&nbsp;&nbsp;</legend>
+        <textarea name="form__note" class="adminarea" style="width:98%;border:1px solid #ccc;"><?=$art_data['note']?></textarea>
+    </fieldset>
+	
+	<input name ="save" type="image" src="design/ico_save.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Сохранить" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''" onclick="articleForm.submit();">
+
+</form>	
+<hr />
+<!-- ************************************************************* -->
+
+	
+

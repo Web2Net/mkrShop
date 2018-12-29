@@ -1,0 +1,342 @@
+<style>
+    .right{
+	    float:right;
+	}
+	.left{
+	    float:left;
+	}
+	.both{
+	    clear:both;
+	}
+
+    .wrap_works_filter_butt{
+	    padding:5px;
+	}
+	.works_filter_butt{
+	    border: 1px solid #000;
+		padding:5px;
+	}
+	
+	.wrap_user_panel{
+	    text-align:center;
+		padding:1px;
+		vertical-align:top;
+	}
+	.user_panel_butt{
+	    border:1px solid #ccc;
+		margin:2px; padding:2px;
+		width:70px; height:65px;
+	}
+</style>
+<?
+// Проверяем на наличие $id
+if(isset($art_data['id']) && $art_data['id'] !== ""){ 
+    $record_is = '1'; // $id есть
+
+    $model = mysql::getRowFromTable("tech_models","id",$art_data['id']);
+    $brand = mysql::getRowFromTable("tech_brands","id",$model['brand_id']);
+    $device = mysql::getRowFromTable("tech_devices","id",$brand['id']);
+}
+else{
+    $record_is = '0'; // $id нет
+} 
+
+?>
+
+<table>
+    <tr>
+	    <td>
+		    <a onclick="javascript:history.back();">
+                <img src="design/ico_back.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Назад" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''">
+            </a>
+		</td>
+	    <td>
+		    <a href="javascript:void(0)" onclick="articleForm.submit();">
+                <img src="design/ico_save.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Сохранить" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''">
+            </a>
+		</td>
+	</tr>
+</table>
+<div class="both br_5"></div>
+<?if ($upd=='ok'){?><div class="ok both br_5"><b>Данные обновлены</b></div><?}?>
+
+<table style="width:100%">
+    <tr>
+
+<form action="?mod=<?=$mod?>&type=<?=$type?>&com=update<?=isset($id)?"&id=".$art_data['id']:""?>" method="post" name="articleForm">
+    <input name="form__id" value="<?=$art_data['id']?>" type="hidden">
+<?//$creator_in = $_SESSION['user_login'];?>
+
+	
+	<table style="width:100%;">
+	    <tr style="vertical-align:top;">
+ 		   <td>
+                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Дивайс &nbsp;&nbsp;</legend>        
+                    <select id="device_dropdown" name="">
+                        <option value="">Девайс</option>
+<?php 
+$array = mysql_query ("SELECT * FROM tech_devices");
+while ($devices = mysql_fetch_array ($array)) {
+    if($devices['id'] == $model['device_id']){$sel = "selected";}else{$sel = "";}
+?>
+                        <option value="<?=$devices['id']?>" <?=$sel?>><?=$devices['caption']?></option>
+<?}?>
+                    </select>
+                </fieldset>
+
+                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Бренд &nbsp;&nbsp;</legend>        
+                    <select id="device_dropdown" name="">
+                        <option value="">Бренд</option>
+<?php 
+$array = mysql_query ("SELECT * FROM tech_brands");
+while ($brands = mysql_fetch_array ($array)) {
+    if($brands['id'] == $model['brand_id']){$sel = "selected";}else{$sel = "";}
+?>
+                        <option value="<?=$brands['id']?>" <?=$sel?>><?=$brands['caption']?></option>
+<?}?>
+                    </select>
+                </fieldset>
+
+                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Модель &nbsp;&nbsp;</legend>        
+                    <select id="model_dropdown" name="">
+                        <option value="">Модель</option>
+<?php 
+$array = mysql_query ("SELECT * FROM tech_models");
+while ($models = mysql_fetch_array ($array)) {
+    if($models['id'] == $model['id']){$sel = "selected";}else{$sel = "";}
+?>
+                        <option value="<?=$models['id']?>" <?=$sel?>><?=$models['caption']?></option>
+<?}?>
+                    </select>
+                </fieldset>
+            </td>
+            <td>&nbsp;</td>
+            <td>
+                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Артикул &nbsp;&nbsp;</legend>        
+                    <input type="text" value="<?=$model['article']?>"  />
+                </fieldset>
+
+                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Формат (Заполнять латиницей. Позже переделаю на выпадающий список.)&nbsp;&nbsp;</legend>        
+                    <input type="text" value="<?=$model['device_format']?>"  />
+                </fieldset>
+
+                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Монохром (0) / Полноцвет (1) (Ставим "0" или "1". Позже переделаю на выпадающий список.)&nbsp;&nbsp;</legend>        
+                    <input type="text" value="<?=$model['color']?>"  />
+                </fieldset>
+            </td>
+        </tr>
+	</table>
+
+
+<?
+if($model['color'] == "1"){
+    include $device['caption_short']."/".$device['caption_short']."_col.php";
+}
+else{
+    include $device['caption_short']."/".$device['caption_short']."_bl.php";
+}
+?>
+ 
+
+
+<?if($record_is == '0'){?>
+    <input name ="save" type="image" src="design/ico_save.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Сохранить" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''" onclick="articleForm.submit();">
+<?}?>	
+<?// **************************************************************************************************?>
+<!--
+<div style="height:2px;background-color:#d91619;"></div>
+	<fieldset class="pole">
+	    <legend>&nbsp;&nbsp;Дата продажи  :&nbsp;&nbsp;</legend>
+	        <input name="form__date_out" value="<?=$art_data['date_out']?>" type="text">
+	</fieldset>
+<?if($_SESSION['user_level'] >= 6){?>	
+	<fieldset class="pole">
+	    <legend>&nbsp;&nbsp;Покупатель  :&nbsp;&nbsp;</legend>
+	<?// search client?>
+				    <div id="_wrap_search">
+                        <div class="search">
+                            <div class="ui-widget" style="padding-top:7px;">
+
+<label for="tags"></label>
+                                    <input id="tags" placeholder="Кодовое имя клиента.." type="text" value="<?=$art_data['client_out']?>" name="form__client_out" class="search"  style="width:98%;border:1px solid #ccc;" />
+                                   <input id="butt_create_works" type="submit" value="Создать" /> 
+
+                            </div>
+                        </div> 
+	                </div>
+<?// /search client?>
+    </fieldset>
+	<hr />
+<?}?>
+	
+	<table>
+	    <tr style="vertical-align:top;">
+		   <td>
+<?if($_REQUEST['com'] == "edit"){$date_out = $art_data['date_out'];}else{$date_out = date("Y-m-d")." ".$_SESSION['user_login'];}?>
+                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Аппарат выкуплен :&nbsp;&nbsp;</legend>
+                    <input name="form__date_in" class="adminform" value="<?=$date_in?>" type="text" />     
+
+                </fieldset>
+	        </td>
+	
+			<td style="text-align:left">
+<?if ($art_data['nal_out']=='Y'){$chk_w = "";$chk_n = "checked =''";$chk_b = "";$chk_z = "";}
+elseif($art_data['nal_out']=='W'){$chk_w = "checked =''";$chk_b = "";$chk_n = "";$chk_z = "";}
+elseif($art_data['nal_out']=='Z'){$chk_z = "checked =''";$chk_b = "";$chk_n = "";$chk_w = "";}
+else{$chk_w = "";$chk_b = "checked =''";$chk_n = "";$chk_w = "";}?> 
+	<fieldset class="pole">
+            <legend>&nbsp;&nbsp;Форма оплаты :&nbsp;&nbsp;</legend>
+            <input type="radio" name="form__nal_out" value="N" <?=$chk_b?>>&nbsp;Безнал<br />
+            <input type="radio" name="form__nal_out" value="Y" <?=$chk_n?>>&nbsp;Нал<br />
+
+		<input type="radio" name="form__nal_out" value="W" <?=$chk_w?>>&nbsp;Гарантийный<br />
+	    <input type="radio" name="form__nal_out" value="Z" <?=$chk_z?>>&nbsp;Шаровой<br />
+</fieldset>		
+			</td>
+            <td>
+                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Счетчик общий :&nbsp;&nbsp;</legend>
+                    <input name='form__count_out' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['count_out']?>" type="text" />
+                </fieldset>
+			</td>
+			<td>
+                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Счетчик ЧБ :&nbsp;&nbsp;</legend>
+                    <input name='form__count_out_bl' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['count_out_bl']?>" type="text" />
+                </fieldset>
+			</td>
+			<td>
+                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Счетчик ЦВ :&nbsp;&nbsp;</legend>
+                    <input name='form__count_out_col' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['count_out_col']?>" type="text" />
+                </fieldset>
+			</td>
+<?if($_SESSION['user_level'] >= 8){?>			
+			<td>
+				<fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Сумма :&nbsp;&nbsp;</legend>
+                    <input name='form__sum_out' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['sum_out']?>" type="text" />
+                </fieldset>
+			</td>
+<?}?>
+		</tr>
+	</table>
+
+
+    <fieldset class="pole">
+        <legend>&nbsp;&nbsp;Комплектация при продаже :&nbsp;&nbsp;</legend>
+        <textarea name="form__obvesi_out" class="adminarea" style="width:98%;border:1px solid #ccc;"><?=$art_data['obvesi_out']?></textarea>
+    </fieldset>
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Примечание при продаже :&nbsp;&nbsp;</legend>
+        <textarea name="form__client_out_note" class="adminarea" style="width:98%;border:1px solid #ccc;"><?=$art_data['client_out_note']?></textarea>
+    </fieldset>
+-->	
+	
+	
+	
+</form>	
+<hr style="height:10px" />
+<?//////////// UPLOAD FILES ///////////////////?>
+<table style="width:100%;vertical-align:top;text-align:left;border:1px solid #d91219;">
+	<tr>
+		<td>
+<fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Счет и прочая бумажки и картинки :&nbsp;&nbsp;</legend>
+
+<?
+$item_dir = "/userfiles/byby/";
+$upload_dir = SITE_PATH.$item_dir;
+$doc_dir = $art_data['id'];
+$full_dir = $upload_dir.$doc_dir;
+?>
+<form action="" method="POST" enctype="multipart/form-data">
+        <input type="file" name="uploadfile">
+        <input type="submit" name="up_file" value="Загрузить"></form>
+
+<?
+if($_POST['up_file']){
+    @mkdir($upload_dir.$doc_dir, 0777); // создаем папку, если ее нет то ошибки не будет, задаем права
+
+    /*echo "<pre>";
+    print_r($_FILES);
+    echo "</pre>";*/
+    //$uploaddir = $upload_dir.'/';
+    $uploadfile = $full_dir."/".basename($_FILES['uploadfile']['name']);
+
+    if(copy($_FILES['uploadfile']['tmp_name'], $uploadfile)){
+        echo "<h3>Файл успешно загружен на сервер</h3>";
+    }
+	else{
+        echo "<h3>Не удалось загрузить файл на сервер</h3>";
+        exit;
+    }
+    //Данные о загруженном файле
+/*
+    echo "<h3>Информация о загруженном на сервер файле: </h3>";
+    echo "<p>Оригинальное имя загруженного файла:<b> ".$_FILES['uploadfile']['name']."</b></p>";
+    echo "<p>Mime-тип загруженного файла:<b> ".$_FILES['uploadfile']['type']."</b></p>";
+    echo "<p>Размер загруженного файла в байтах:<b> ".$_FILES['uploadfile']['size']."</b></p>";
+    echo "<p>Временное имя файла: <b>".$_FILES['uploadfile']['tmp_name']."</b></p>";
+*/
+}
+?>
+
+<?php
+SYS::varDump($_POST,__FILE__,__LINE__,"POST");
+
+if($com !== "add"){
+$dir  = $full_dir;
+$files = scandir($dir);
+foreach ($files as $file){
+
+    if($file == "." || $file == ".."){}
+	else{
+
+$deleting_file = SITE_PATH . $item_dir . $doc_dir ."/". $file;	
+
+
+
+	
+	?>
+		<nobr><a href='<?=$item_dir?><?=$doc_dir?>/<?=$file?>' style='color:blue;' target='_blank'><?=$file?></a>
+<?if($_SESSION['user_level'] >= 6){?>
+		<form action="" method="post">
+                   <input type="hidden" name="del_file" value="<?=$deleting_file?>" />
+                   <input type="submit" value="удалить" />
+                </form>
+<?}?>
+		</nobr>
+		
+		 <br />
+	<?}
+    
+}
+}
+?>
+
+				</fieldset>		
+		</td>
+		
+	</tr>	
+</table>
+<?//////////// /UPLOAD FILES ///////////////////?>
+
+<hr style="height:10px" />
+
+
+
+<hr>
+
+
+
+
+

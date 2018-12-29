@@ -1,0 +1,55 @@
+<?if($list_item!=NULL){?>
+<div class="polosa"><?=SEARCH_SITE_NOTE_SEARCH_RESULT?> <?=RAZDELYALKA?> Товары</div>
+<div class="wrap_catalog">
+<?SYS::varDump($list_item,__FILE__,__LINE__,'list_item');?>
+<?foreach($list_item as $key=>$val){
+
+
+   
+   $tag_2 = Search::getTag(2,$val['connect']); // Вытаскиваем поля Тэга 2-го уровня данного товара для формирования адресной строки
+   $tag_1 = Search::getTag(1,$tag_2['id']); // Вытаскиваем поля Тэга 1-го уровня данного товара для формирования адресной строки
+   $tag_0 = Search::getTag(0,$tag_1['id']); // Вытаскиваем поля Тэга 0-го уровня данного товара для формирования адресной строки
+ 
+//SYS::varDump($tag_1['connect'],__FILE__,__LINE__,'tag_1_connect');
+    $img1=SHOP_ITEM_IMG_PATH."/".$val["id"]."/1m.png";
+    if(!file_exists(getenv("DOCUMENT_ROOT").$img1))$img1="/design/img/noimage_740x480.png";
+	
+	    if(file_exists(SITE_PATH."/userfiles/product-image/".$val["1Cid"].".jpg")){
+		    $img1="/userfiles/product-image/".$val["1Cid"].".jpg";
+		}
+		else{
+		    $img1=SHOP_ITEM_IMG_PATH."/".$val["id"]."/1m.png";
+		}
+		$a_href = "/shop/tag_0/".$tag_1['seolink']."/".$tag_2['seolink']."/".$val["id"]."-".$val["seolink"];
+		$fancy =  'target="_blank"';
+//		$caption = $val["caption"];
+		$caption = $val["meta_t"];
+		$description = "";
+		$nalichie = $val["nalichie"];
+        if(!file_exists(getenv("DOCUMENT_ROOT").$img1))$img1="/design/img/noimage_740x480.png";
+	
+include SITE_PATH."/site/inc/item-list-price.tpl.htm";
+
+}}?>
+
+<div class="both br_10"></div>
+
+<?if($list_art!=NULL){?>
+<div class="polosa"><?=SEARCH_SITE_NOTE_SEARCH_RESULT?> <?=RAZDELYALKA?> Статьи</div>
+<div class="wrap_catalog">
+
+<?foreach($list_art as $key=>$val){?>
+<?
+
+
+        $img1=ART_ITEM_IMG_PATH."/".$val["id"]."/1m.png";
+		$a_href = "/art/".$tag_1['seolink']."/".$tag_2['seolink']."/".$val["id"]."-".$val["seolink"];
+		$fancy =  'target="_blank"';
+		$caption = $val["caption"];
+		$description = $val["meta_d"];;
+        if(!file_exists(getenv("DOCUMENT_ROOT").$img1))$img1="/design/img/noimage_740x480.png";
+
+?>
+
+<?include SITE_PATH."/site/inc/tag-list.tpl.htm";?>
+<?}}?>

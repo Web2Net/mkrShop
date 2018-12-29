@@ -1,0 +1,196 @@
+
+<script>
+//$(document).ready(function(){
+    
+	function showTagZerroList(){
+      $('.tag_list').slideToggle(500);
+    }
+
+//});
+
+</script>
+<style>
+#butt_show_menu{
+    padding:5px;
+    text-align:center;
+    background-color:#d91219;
+    width:125px; height:125px;
+	cursor:pointer;
+	color:#fff;
+	font-weight:900;
+	font-size:125%;
+
+}
+
+.tag_list{
+    display:none;
+    width:275px; height:auto;
+    position:absolute;
+    background-color:#fff;
+	border-bottom:5px solid #ccc;
+	
+}
+.wrap_tag0{
+    
+}
+.tag0{
+    text-align:left;
+	padding:5px;
+	border-left:2px solid #fff;
+	cursor:pointer;
+	height:50px;
+	line-height:50px;
+	vertical-align:center;
+	width:275px;
+}
+.tag0:hover{
+    background-color:#ccc;
+    color:#000;
+	border-left:2px solid #d91219;
+}
+.tag0_img{
+    height:45px;
+}
+
+.tag11{
+    border-left:1px solid #fff;
+	padding-left:5px;
+	display:inline-block;
+	width:350px;height:auto;
+	border:1px solid #ccc;
+	background-repeat:no-repeat;
+	background-position:center center;
+	margin:5px;
+	text-align:center;
+    bottom: 0px;
+	
+}
+.tag2{
+    
+	font-size:75%;
+	height:30px;
+	display: block;
+	text-align:left;
+} 
+.tag2:hover{
+    text-decoration:underline;
+	height:30px;
+}
+
+.tag0:hover .tag1 {
+    display: inline;
+}
+.tag1 {
+    left:275px;
+	width:775px;
+top:0px;
+    padding-left:15px;
+position:absolute;
+z-index:100;
+    background-color:#f7f7f7;
+    display: none;
+    border-bottom:1px solid #000;
+    min-height:700px;
+
+    
+}
+.tag1_img{
+    height:75px;
+}
+
+.wrap_hor_m{
+    background-color:#fafaeb;
+	width:100%;
+	border-top:1px solid #ccc;
+	border-bottom:1px solid #ccc;
+	height:120px;
+}
+.hor_m{
+    width:155px;
+}
+.hor_m:hover{
+    background-color:#f7f7d0;
+}
+.hor_m:active{
+    background-color:#faebfa;
+}
+.hor_m img{
+    height:75px;
+}
+</style>
+<?
+$img_hm1=SHOP_TAG_IMG_PATH."/1/1.png";
+$img_hm2=SHOP_TAG_IMG_PATH."/3/1.png";
+$img_hm3=SHOP_TAG_IMG_PATH."/9/1.png";
+$img_hm4=SHOP_TAG_IMG_PATH."/11/1.png";
+$img_hm5=SHOP_TAG_IMG_PATH."/17/1.png";
+$img_hm6=SHOP_TAG_IMG_PATH."/84/1.png";
+
+if(!file_exists(getenv("DOCUMENT_ROOT").$img_hm1))$img_hm1="/design/img/noimage_450x450.png";
+if(!file_exists(getenv("DOCUMENT_ROOT").$img_hm2))$img_hm2="/design/img/noimage_450x450.png";
+if(!file_exists(getenv("DOCUMENT_ROOT").$img_hm3))$img_hm3="/design/img/noimage_450x450.png";
+if(!file_exists(getenv("DOCUMENT_ROOT").$img_hm4))$img_hm4="/design/img/noimage_450x450.png";
+if(!file_exists(getenv("DOCUMENT_ROOT").$img_hm5))$img_hm5="/design/img/noimage_450x450.png";
+if(!file_exists(getenv("DOCUMENT_ROOT").$img_hm6))$img_hm6="/design/img/noimage_450x450.png";
+?>
+<table class="wrap_hor_m">
+    <tr>
+	    <td id="butt_show_menu" onclick="showTagZerroList();">Все<br />категории</td>
+	    <td class="hor_m"><a href="/shop/kopirovalnye-apparaty/kopirovalnye-apparaty-1"><img src="<?=$img_hm1?>" /><div class="r5" style="line-height:100%;">Копировальные аппараты</div></a></td>
+	    <td class="hor_m"><a href="/shop/komputernaya-tekhnika/komputery"><img src="<?=$img_hm2?>" /><div class="r5" style="line-height:100%;">Компьютеры</div></a></td>
+	    <td class="hor_m"><a href="/shop/komputernaya-tekhnika/noutbuki"><img src="<?=$img_hm3?>" /><div class="r5" style="line-height:100%;">Ноутбуки</div></a></td>
+	    <td class="hor_m"><a href="/shop/komputernaya-tekhnika/planshety"><img src="<?=$img_hm4?>" /><div class="r5" style="line-height:100%;">Планшеты</div></a></td>
+	    <td class="hor_m"><a href="/shop/orgtekhnika/mfu"><img src="<?=$img_hm5?>" /><div class="r5" style="line-height:100%;">МФУ</div></a></td>
+	    <td class="hor_m"><a href="/shop/uslugi"><img src="<?=$img_hm6?>" /><div class="r5" style="line-height:100%;">Услуги</div></a></td>
+	</tr>
+</table>
+
+
+<?
+if($tag0_list!=NULL){
+?>
+<div class="tag_list show_tag1">
+<?
+    foreach($tag0_list as $key0=>$val0){
+?>
+    <div class="tag0">
+	    <div><?=$val0['caption']?></div>
+        <div class="tag1">
+<?
+        if($tag1_list!=NULL){
+            foreach($tag1_list as $key1=>$val1){
+			    if($val1["hit"]==$key0){
+?>
+            <div class="tag11 r5" style="background-color:#fafaeb;vertical-align:top;">
+			    <div class="r5" style="line-height:30px; height:30px; background-color:#ffe4c4;margin:2px 2px 2px -3px;">
+				    <a href="/shop/<?=$val0["seolink"]?>/<?=$val1["seolink"]?>"><?=$val1['caption']?></a>
+				</div>
+			
+<?
+$connect_tag=explode(";",substr($val1['connect'], 1, -1));$i2=1;
+if($connect_tag[0]!=''){foreach($connect_tag as $key2=>$child_id){
+$val2=$tag2_list[$child_id];
+?>
+<?if($val2["showing"] == "1"){?>
+<div class="tag2">
+    <a style="<?=$GLOBALS['tag2']==$val2["seolink"]?'font-weight:bold;':''?>" href="/shop/<?=$val0["seolink"]?>/<?=$val1["seolink"]?>/<?=$val2["seolink"]?>">
+        <?=$val2["caption"]?>
+	</a>
+</div>
+
+<?}?>
+<div class="br_10"></div>
+<?}}?>
+</div>			
+			
+<?
+                }
+		    }
+?>      </div>
+    </div>
+<?  
+        }
+    }
+?>
+</div>
+<?}?>

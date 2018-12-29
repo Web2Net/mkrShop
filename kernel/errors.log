@@ -1,0 +1,6 @@
+[2017-05-30 22:52:40] Текст ошибки: mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead | Файл: /opt/lampp/htdocs/mkrshop/kernel/mysql.class.php | Строка: 3
+============
+[2017-05-30 22:52:54] Текст ошибки: mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead | Файл: /opt/lampp/htdocs/mkrshop/kernel/mysql.class.php | Строка: 3
+============
+[2017-05-30 22:54:28] Текст ошибки: mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead | Файл: /opt/lampp/htdocs/mkrshop/kernel/mysql.class.php | Строка: 3
+============

@@ -1,0 +1,253 @@
+<style>
+    .right{
+	    float:right;
+	}
+	.left{
+	    float:left;
+	}
+	.both{
+	    clear:both;
+	}
+
+    .wrap_works_filter_butt{
+	    padding:5px;
+	}
+	.works_filter_butt{
+	    border: 1px solid #000;
+		padding:5px;
+	}
+	
+	.wrap_user_panel{
+	    text-align:center;
+		padding:1px;
+		vertical-align:top;
+	}
+	.user_panel_butt{
+	    border:1px solid #ccc;
+		margin:2px; padding:2px;
+		width:70px; height:65px;
+	}
+</style>
+<table>
+    <tr>
+	    <td>
+		    <a href="?mod=<?=$mod?>&type=all&com=view">
+                <img src="design/ico_back.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Назад" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''">
+            </a>
+		</td>
+	    <td>
+		    <a href="javascript:void(0)" onclick="articleForm.submit();">
+                <img src="design/ico_save.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Сохранить" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''">
+            </a>
+		</td>
+	</tr>
+</table>
+<div class="both br_5"></div>
+<?if ($upd=='ok'){?><div class="ok both br_5"><b>Данные обновлены</b></div><?}?>
+
+<table style="width:100%">
+    <tr>
+	    <td style="padding-left:10px;">
+<?//////////// UPLOAD FILES ///////////////////?>
+<?
+$item_dir = "/userfiles/works/";
+$upload_dir = SITE_PATH.$item_dir;
+$doc_dir = $art_data['id'];
+$full_dir = $upload_dir.$doc_dir;
+?>
+<form action="" method="POST" enctype="multipart/form-data">
+        <input type="file" name="uploadfile">
+        <input type="submit" name="up_file" value="Загрузить"></form>
+</form>
+<?
+if($_POST['up_file']){
+    @mkdir($upload_dir.$doc_dir, 0777); // создаем папку, если ее нет то ошибки не будет, задаем права
+
+    /*echo "<pre>";
+    print_r($_FILES);
+    echo "</pre>";*/
+    //$uploaddir = $upload_dir.'/';
+    $uploadfile = $full_dir."/".basename($_FILES['uploadfile']['name']);
+
+    if(copy($_FILES['uploadfile']['tmp_name'], $uploadfile)){
+        echo "<h3>Файл успешно загружен на сервер</h3>";
+    }
+	else{
+        echo "<h3>Не удалось загрузить файл на сервер</h3>";
+        exit;
+    }
+    //Данные о загруженном файле
+/*
+    echo "<h3>Информация о загруженном на сервер файле: </h3>";
+    echo "<p>Оригинальное имя загруженного файла:<b> ".$_FILES['uploadfile']['name']."</b></p>";
+    echo "<p>Mime-тип загруженного файла:<b> ".$_FILES['uploadfile']['type']."</b></p>";
+    echo "<p>Размер загруженного файла в байтах:<b> ".$_FILES['uploadfile']['size']."</b></p>";
+    echo "<p>Временное имя файла: <b>".$_FILES['uploadfile']['tmp_name']."</b></p>";
+*/
+}
+?>
+<?php
+if($com !== "add"){
+$dir  = $full_dir;
+$files = scandir($dir);
+foreach ($files as $file){
+    if($file == "." || $file == ".."){}
+	else{
+		echo "<nobr><a href='{$item_dir}{$doc_dir}/{$file}' style='color:blue;' target='_blank'>{$file}</a></nobr> <br />";
+	}
+    
+}
+}
+?>
+<?//////////// /UPLOAD FILES ///////////////////?>
+		</td>
+<?		
+$create = explode(" ",$art_data['date_create']);
+$create_date = $create['0'];
+$create_author = $create['1'];
+?>		
+	    <td class="heading1">
+		    <span class="right" style="color:#ccc;font-size:28px; align:right;">Новая заявка</span><br />
+            <span class="right"><?=$art_data['client']?></span><br />
+			<span class="right" style="color:#ccc;font-size:14px; align:right;"><?=$create_date?> :: <?=ucfirst($create_author)?></span>
+		</td>
+	</tr>
+</table>
+<hr />
+<div class="both br_5"></div>
+<!--
+<div style="border:1px solid #d91219; padding:10px;margin:5px;">
+    <h2>УВАГА, УВАГА!!!</h2>
+		Памятка для многоуважаемой Ирины Геннадьевны!<br />
+		С помощью данной формы загружаем документы (счета, акты и прочая макулатура..)<br />
+        Временно.. Название файлов должно быть латиницей и не должно содержать пробелов и всяческих непонятных знаков, типа (% ? * %)..<br />
+		Оптимальное название - "schet_125_ot_16.03.2017.doc"<br />
+		В дальнейшем сие неудобство я устраню.. <br /><br />
+		Памятка для остальных, не менее уважаемых камрадов..<br />
+		Если нужно скачать файл - то просто тыць по названию и загрузка начнется.. А там хош читай, хош печатай, хош в рамку и на стену..))<br /><br />
+		ЗЫ. После загрузки файла, кнопку "Сохранить" можно не нажимать..<br />
+		Всегда ваш, You.<br /><br />
+	
+</div>
+-->
+<div style="color:#fff; font-size:24px; font-weight:900; text-align:center; padding:5px;background-color:#d91219">Не забываем править все необходимые поля!!</div>
+<div class="both br_5"></div>
+<form action="?mod=<?=$mod?>&type=<?=$type?>&com=update<?=isset($id)?"&id=".$id:""?>" method="post" name="articleForm">
+    <input name="form__id" value="" type="hidden">
+<?
+if($art_data['ingener'] == ""){$ingener = $_SESSION['user_login'];}
+else{$ingener = $art_data['ingener'];}
+?>
+    <input name="form__ingener" value="<?=$ingener?>" type="hidden">	
+
+	<table>
+	    <tr style="vertical-align:top;">
+		    <td>
+<?if($_REQUEST['com'] == "edit"){$date = $art_data['date_create'];}else{$date = date("Y-m-d")." ".$_SESSION['user_login'];}?>
+    <fieldset class="pole">
+        <legend>&nbsp;&nbsp;Заявка получена :&nbsp;&nbsp;</legend>
+        <input name="form__date_create" class="adminform" value="<?=$date?>" type="text" />
+    </fieldset>
+	        </td>
+<!--			
+            <td>
+<?if ($art_data['prioritet']=='Y'){$bg = "#fd7c7c";}else{$bg = "#fff";}?>	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Срочняковая :&nbsp;&nbsp;</legend>
+        <div style="margin-bottom:0px;background-color:<?=$bg?>">
+		    <label><input name="form__prioritet" type="checkbox" <?if ($art_data['prioritet']=='Y'){?> checked=""<?}?>value="Y" /></label>
+		</div>
+    </fieldset>
+	        </td>
+-->			
+			<td style="text-align:left">
+<?if ($art_data['nal']=='Y'){$chk_w = "";$chk_n = "checked =''";$chk_b = "";$chk_z = "";}
+elseif($art_data['nal']=='W'){$chk_w = "checked =''";$chk_b = "";$chk_n = "";$chk_z = "";}
+elseif($art_data['nal']=='Z'){$chk_z = "checked =''";$chk_b = "";$chk_n = "";$chk_w = "";}
+else{$chk_w = "";$chk_b = "checked =''";$chk_n = "";$chk_w = "";}?> 
+	<fieldset class="pole">
+            <legend>&nbsp;&nbsp;Форма оплаты :&nbsp;&nbsp;</legend>
+            <input type="radio" name="form__nal" value="N" <?=$chk_b?>>&nbsp;Безнал<br />
+            <input type="radio" name="form__nal" value="Y" <?=$chk_n?>>&nbsp;Нал<br />
+	    <input type="radio" name="form__nal" value="W" <?=$chk_w?>>&nbsp;Гарантийный<br />
+	    <input type="radio" name="form__nal" value="Z" <?=$chk_z?>>&nbsp;Шаровой<br />
+    </fieldset>		
+			</td>
+			<td>
+<?if ($art_data['viezd']=='Y'){$viezd_y = "checked =''";$viezd_n = "";}else{$viezd_n = "checked =''";$viezd_y = "";}?> 
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Где производились работы :&nbsp;&nbsp;</legend>
+        <input type="radio" name="form__viezd" value="N" <?=$viezd_n?>>В сервисе<Br>
+        <input type="radio" name="form__viezd" value="Y" <?=$viezd_y?>>На выезде<Br>
+    </fieldset>		
+			</td>
+		</tr>
+	</table>
+
+<?include SITE_PATH."/cms/works/tpl/works_button_panel_2.php"; // Чекбоксы выполненных работ, выписки доков и прочие..?>
+	
+	
+	
+	
+	
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Клиент :&nbsp;&nbsp;</legend>
+        <input name='form__client' class='adminform' style="font-size:28px;width:98%;border:1px solid #ccc;" value="<?=$art_data['client']?>" type="text" />
+    </fieldset>
+<!--	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Контактная инфа :&nbsp;&nbsp;</legend>
+        <input name='form__data_client' class='adminform' style="width:98%;" value="<?=$art_data['data_client']?>" type="text" />
+    </fieldset>
+-->	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Дивайс :&nbsp;&nbsp;</legend>
+        <input name='form__divice' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['divice']?>" type="text" />
+    </fieldset>
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;S/N :&nbsp;&nbsp;</legend>
+        <input name='form__sn' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['sn']?>" type="text" />
+    </fieldset>
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Неисправность :&nbsp;&nbsp;</legend>
+        <textarea name="form__neispravnost" id="form__neispravnost" style="width:98%;border:1px solid #ccc;" rows="5"><?=$art_data["neispravnost"];?></textarea>
+
+        <script type="text/javascript">
+            CKEDITOR.replace( 'neispravnost',{
+            //    toolbar : 'Basic'
+            //    toolbar : 'Medium'
+                toolbar : 'Default'
+            });
+        </script>
+    </fieldset>
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Что сделано :&nbsp;&nbsp;</legend>
+        <textarea name="form__content" id="form__content" style="width:98%;border:1px solid #ccc;" rows="5"><?=$art_data["content"];?></textarea>
+
+        <script type="text/javascript">
+            CKEDITOR.replace( 'content',{
+                toolbar : 'Basic'
+            //    toolbar : 'Medium'
+            //    toolbar : 'Default'
+            });
+        </script>
+		
+    </fieldset>
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Примечание :&nbsp;&nbsp;</legend>
+        <textarea name="form__note" class="adminarea" style="width:98%;border:1px solid #ccc;"><?=$art_data['note']?></textarea>
+    </fieldset>
+	
+	<input name ="save" type="image" src="design/ico_save.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Сохранить" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''" onclick="articleForm.submit();">
+
+</form>	
+<hr />
+<!-- ************************************************************* -->
+
+	
+

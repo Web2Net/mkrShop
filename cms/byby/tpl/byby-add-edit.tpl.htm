@@ -1,0 +1,427 @@
+<style>
+    .right{
+	    float:right;
+	}
+	.left{
+	    float:left;
+	}
+	.both{
+	    clear:both;
+	}
+
+    .wrap_works_filter_butt{
+	    padding:5px;
+	}
+	.works_filter_butt{
+	    border: 1px solid #000;
+		padding:5px;
+	}
+	
+	.wrap_user_panel{
+	    text-align:center;
+		padding:1px;
+		vertical-align:top;
+	}
+	.user_panel_butt{
+	    border:1px solid #ccc;
+		margin:2px; padding:2px;
+		width:70px; height:65px;
+	}
+</style>
+<table>
+    <tr>
+	    <td>
+		    <a onclick="javascript:history.back();">
+                <img src="design/ico_back.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Назад" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''">
+            </a>
+		</td>
+	    <td>
+		    <a href="javascript:void(0)" onclick="articleForm.submit();">
+                <img src="design/ico_save.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Сохранить" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''">
+            </a>
+		</td>
+	</tr>
+</table>
+<div class="both br_5"></div>
+<?if ($upd=='ok'){?><div class="ok both br_5"><b>Данные обновлены</b></div><?}?>
+
+<table style="width:100%">
+    <tr>
+	    <td style="padding-left:10px;">
+				
+		</td>
+<?		
+$create = explode(" ",$art_data['date_in']);
+$create_date = $create['0'];
+$create_author = $create['1'];
+?>		
+<?
+// Линк на страничку клиента
+$client_page_link = "?mod=user&type=item&com=edit&tag=8&id=".$art_data['client_id']."";
+?>
+	    <td class="heading1">
+		    <span class="right" style="color:#ccc;font-size:28px; align:right;">Выкуп № <?=$art_data['id']?></span><br />
+            <span class="right"><?=$art_data['caption']?></span><br />
+            <span class="right" style="color:#ccc;font-size:14px; align:right;"><?=$create_date?> :: <?=ucfirst($create_author)?></span>
+	    </td>
+	</tr>
+</table>
+<hr />
+
+<form action="?mod=<?=$mod?>&type=<?=$type?>&com=update<?=isset($id)?"&id=".$id:""?>" method="post" name="articleForm">
+    <input name="form__id" value="<?=$art_data['id']?>" type="hidden">
+<?//$creator_in = $_SESSION['user_login'];?>
+   
+	<fieldset class="pole">
+	    <legend>&nbsp;&nbsp;Дата покупки  :&nbsp;&nbsp;</legend>
+	        <input name="form__date_in" value="<?=$art_data['date_in']?>" type="text">
+	</fieldset>	
+		
+    	<fieldset class="pole">
+            <legend style="font-size:14px;">&nbsp;&nbsp;Дивайс :&nbsp;&nbsp;</legend>
+            <input name='form__caption' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['caption']?>" type="text" />
+        </fieldset>
+<?if($_SESSION['user_level'] >= 8){?>	
+	    <fieldset class="pole">
+	        <legend>&nbsp;&nbsp;Поставщик :&nbsp;&nbsp;</legend>
+	<?// search client?>
+			    <div id="_wrap_search">
+                    <div class="search">
+                        <div class="ui-widget" style="padding-top:7px;">
+
+                <!--<label for="tags"></label>-->
+                            <input id="tags" placeholder="Кодовое имя клиента.." type="text" value="<?=$art_data['client_in']?>" name="form__client_in" class="search"  style="width:98%;border:1px solid #ccc;" />
+<!--                                    <input id="butt_create_works" type="submit" value="Создать" />  -->
+                        </div>
+                    </div> 
+                </div>
+<?// /search client?>
+        </fieldset>
+	<hr />
+<?}?>	
+	
+	<table>
+	    <tr style="vertical-align:top;">
+		   <td>
+<?if($_REQUEST['com'] == "edit"){$date_in = $art_data['date_in'];}else{$date_in = date("Y-m-d")." ".$_SESSION['user_login'];}?>
+<!--                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Аппарат выкуплен :&nbsp;&nbsp;</legend>
+                    <input name="form__date_in" class="adminform" value="<?=$date_in?>" type="text" />     
+
+                </fieldset>
+	        </td>
+-->		
+			<td style="text-align:left">
+<?
+if ($art_data['nal_in']=='W'){ // Гарантийный
+    $chk_w = "checked =''";
+    $chk_n = "";
+    $chk_b = "";
+    $chk_z = "";
+    $chk_c = "";
+    $chk_s = "";
+}
+elseif($art_data['nal_in']=='Y'){ // Нал
+    $chk_w = "";
+    $chk_n = "checked =''";
+    $chk_b = "";
+    $chk_z = "";
+    $chk_c = "";
+    $chk_s = "";
+}
+elseif($art_data['nal_in']=='Z'){ // Шара
+    $chk_w = "";
+    $chk_b = "";
+    $chk_n = "";
+    $chk_z = "checked =''";
+    $chk_c = "";
+    $chk_s = "";
+}
+elseif($art_data['nal_in']=='B'){ // Бартер
+    $chk_w = "";
+    $chk_b = "";
+    $chk_n = "";
+    $chk_z = "";
+    $chk_c = "checked =''";
+    $chk_s = "";
+}
+elseif($art_data['nal_in']=='S'){ // Услуги
+    $chk_w = "";
+    $chk_b = "";
+    $chk_n = "";
+    $chk_z = "";
+    $chk_c = "";
+    $chk_s = "checked =''";
+}
+else{                             // БезНал
+    $chk_w = "";
+    $chk_b = "checked =''";
+    $chk_n = "";
+    $chk_z = "";
+    $chk_c = "";
+    $chk_s = "";
+    
+}
+?> 
+	<fieldset class="pole">
+            <legend>&nbsp;&nbsp;Форма оплаты :&nbsp;&nbsp;</legend>
+            <input type="radio" name="form__nal_in" value="N" <?=$chk_b?>>&nbsp;Безнал<br />
+            <input type="radio" name="form__nal_in" value="Y" <?=$chk_n?>>&nbsp;Нал<br />
+            <input type="radio" name="form__nal_in" value="W" <?=$chk_w?>>&nbsp;Гарантийный<br />
+	        <input type="radio" name="form__nal_in" value="Z" <?=$chk_z?>>&nbsp;Шаровой<br />
+		    <input type="radio" name="form__nal_in" value="B" <?=$chk_c?>>&nbsp;Бартер<br />
+	        <input type="radio" name="form__nal_in" value="S" <?=$chk_s?>>&nbsp;Услуги<br />
+
+</fieldset>		
+			</td>
+            <td>
+                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Счетчик общий :&nbsp;&nbsp;</legend>
+                    <input name='form__count_in' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['count_in']?>" type="text" />
+                </fieldset>
+			</td>
+			<td>
+                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Счетчик ЧБ :&nbsp;&nbsp;</legend>
+                    <input name='form__count_in_bl' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['count_in_bl']?>" type="text" />
+                </fieldset>
+			</td>
+			<td>
+                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Счетчик ЦВ :&nbsp;&nbsp;</legend>
+                    <input name='form__count_in_col' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['count_in_col']?>" type="text" />
+                </fieldset>
+			</td>
+			<td>
+			    <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;S/N :&nbsp;&nbsp;</legend>
+                    <input name='form__sn' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['sn']?>" type="text" />
+                </fieldset>	
+			</td>
+<?if($_SESSION['user_level'] >= 8){?>			
+			<td>
+				<fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Сумма :&nbsp;&nbsp;</legend>
+                    <input name='form__sum_in' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['sum_in']?>" type="text" />
+                </fieldset>
+			</td>
+<?}?>			
+		</tr>
+	</table>
+
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Причина выкупа :&nbsp;&nbsp;</legend>
+        <textarea name="form__client_in_note" class="adminarea" style="width:98%;border:1px solid #ccc;"><?=$art_data['client_in_note']?></textarea>
+    </fieldset>
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Комплектация при выкупе :&nbsp;&nbsp;</legend>
+        <textarea name="form__obvesi_in" class="adminarea" style="width:98%;border:1px solid #ccc;"><?=$art_data['obvesi_in']?></textarea>
+    </fieldset>
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Примечание :&nbsp;&nbsp;</legend>
+        <textarea name="form__note" class="adminarea" style="width:98%;border:1px solid #ccc;"><?=$art_data['note']?></textarea>
+    </fieldset>
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Предпродажка :&nbsp;&nbsp;</legend>
+        <textarea name="form__predprodazhka" class="adminarea" style="width:98%;border:1px solid #ccc;"><?=$art_data['predprodazhka']?></textarea>
+    </fieldset>
+	
+<?// **************************************************************************************************?>
+<div style="height:2px;background-color:#d91619;"></div>
+	<fieldset class="pole">
+	    <legend>&nbsp;&nbsp;Дата продажи  :&nbsp;&nbsp;</legend>
+	        <input name="form__date_out" value="<?=$art_data['date_out']?>" type="text">
+	</fieldset>
+<?if($_SESSION['user_level'] >= 6){?>	
+	<fieldset class="pole">
+	    <legend>&nbsp;&nbsp;Покупатель  :&nbsp;&nbsp;</legend>
+	<?// search client?>
+				    <div id="_wrap_search">
+                        <div class="search">
+                            <div class="ui-widget" style="padding-top:7px;">
+
+                <!--<label for="tags"></label>-->
+                                    <input id="tags" placeholder="Кодовое имя клиента.." type="text" value="<?=$art_data['client_out']?>" name="form__client_out" class="search"  style="width:98%;border:1px solid #ccc;" />
+<!--                                    <input id="butt_create_works" type="submit" value="Создать" />  -->
+
+                            </div>
+                        </div> 
+	                </div>
+<?// /search client?>
+    </fieldset>
+	<hr />
+<?}?>
+	
+	<table>
+	    <tr style="vertical-align:top;">
+		   <td>
+<?if($_REQUEST['com'] == "edit"){$date_out = $art_data['date_out'];}else{$date_out = date("Y-m-d")." ".$_SESSION['user_login'];}?>
+<!--                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Аппарат выкуплен :&nbsp;&nbsp;</legend>
+                    <input name="form__date_in" class="adminform" value="<?=$date_in?>" type="text" />     
+
+                </fieldset>
+	        </td>
+-->		
+			<td style="text-align:left">
+<?if ($art_data['nal_out']=='Y'){$chk_w = "";$chk_n = "checked =''";$chk_b = "";$chk_z = "";}
+elseif($art_data['nal_out']=='W'){$chk_w = "checked =''";$chk_b = "";$chk_n = "";$chk_z = "";}
+elseif($art_data['nal_out']=='Z'){$chk_z = "checked =''";$chk_b = "";$chk_n = "";$chk_w = "";}
+else{$chk_w = "";$chk_b = "checked =''";$chk_n = "";$chk_w = "";}?> 
+	<fieldset class="pole">
+            <legend>&nbsp;&nbsp;Форма оплаты :&nbsp;&nbsp;</legend>
+            <input type="radio" name="form__nal_out" value="N" <?=$chk_b?>>&nbsp;Безнал<br />
+            <input type="radio" name="form__nal_out" value="Y" <?=$chk_n?>>&nbsp;Нал<br />
+<!--
+		<input type="radio" name="form__nal_out" value="W" <?=$chk_w?>>&nbsp;Гарантийный<br />
+	    <input type="radio" name="form__nal_out" value="Z" <?=$chk_z?>>&nbsp;Шаровой<br />
+-->
+</fieldset>		
+			</td>
+            <td>
+                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Счетчик общий :&nbsp;&nbsp;</legend>
+                    <input name='form__count_out' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['count_out']?>" type="text" />
+                </fieldset>
+			</td>
+			<td>
+                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Счетчик ЧБ :&nbsp;&nbsp;</legend>
+                    <input name='form__count_out_bl' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['count_out_bl']?>" type="text" />
+                </fieldset>
+			</td>
+			<td>
+                <fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Счетчик ЦВ :&nbsp;&nbsp;</legend>
+                    <input name='form__count_out_col' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['count_out_col']?>" type="text" />
+                </fieldset>
+			</td>
+<?if($_SESSION['user_level'] >= 8){?>			
+			<td>
+				<fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Сумма :&nbsp;&nbsp;</legend>
+                    <input name='form__sum_out' class='adminform' style="width:98%;border:1px solid #ccc;" value="<?=$art_data['sum_out']?>" type="text" />
+                </fieldset>
+			</td>
+<?}?>
+		</tr>
+	</table>
+
+
+<!--	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Контактная инфа :&nbsp;&nbsp;</legend>
+        <input name='form__data_client' class='adminform' style="width:98%;" value="<?=$art_data['data_client']?>" type="text" />
+    </fieldset>
+-->	
+	
+
+    <fieldset class="pole">
+        <legend>&nbsp;&nbsp;Комплектация при продаже :&nbsp;&nbsp;</legend>
+        <textarea name="form__obvesi_out" class="adminarea" style="width:98%;border:1px solid #ccc;"><?=$art_data['obvesi_out']?></textarea>
+    </fieldset>
+	
+	<fieldset class="pole">
+        <legend>&nbsp;&nbsp;Примечание при продаже :&nbsp;&nbsp;</legend>
+        <textarea name="form__client_out_note" class="adminarea" style="width:98%;border:1px solid #ccc;"><?=$art_data['client_out_note']?></textarea>
+    </fieldset>
+	
+	
+	<input name ="save" type="image" src="design/ico_save.gif" style="border: 1px solid rgb(90, 126, 220); cursor: pointer;" title="Сохранить" onmouseover="this.style.background='#D8D8D8';" onmouseout="this.style.background=''" onclick="articleForm.submit();">
+
+	
+	
+</form>	
+<hr style="height:10px" />
+
+<table style="width:100%;vertical-align:top;text-align:left;border:1px solid #d91219;">
+	<tr>
+		<td>
+<fieldset class="pole">
+                    <legend>&nbsp;&nbsp;Счет и прочая бумажки и картинки :&nbsp;&nbsp;</legend>
+<?//////////// UPLOAD FILES ///////////////////?>
+<?
+$item_dir = "/userfiles/byby/";
+$upload_dir = SITE_PATH.$item_dir;
+$doc_dir = $art_data['id'];
+$full_dir = $upload_dir.$doc_dir;
+?>
+<form action="" method="POST" enctype="multipart/form-data">
+        <input type="file" name="uploadfile">
+        <input type="submit" name="up_file" value="Загрузить"></form>
+
+<?
+if($_POST['up_file']){
+    @mkdir($upload_dir.$doc_dir, 0777); // создаем папку, если ее нет то ошибки не будет, задаем права
+
+    /*echo "<pre>";
+    print_r($_FILES);
+    echo "</pre>";*/
+    //$uploaddir = $upload_dir.'/';
+    $uploadfile = $full_dir."/".basename($_FILES['uploadfile']['name']);
+
+    if(copy($_FILES['uploadfile']['tmp_name'], $uploadfile)){
+        echo "<h3>Файл успешно загружен на сервер</h3>";
+    }
+	else{
+        echo "<h3>Не удалось загрузить файл на сервер</h3>";
+        exit;
+    }
+    //Данные о загруженном файле
+/*
+    echo "<h3>Информация о загруженном на сервер файле: </h3>";
+    echo "<p>Оригинальное имя загруженного файла:<b> ".$_FILES['uploadfile']['name']."</b></p>";
+    echo "<p>Mime-тип загруженного файла:<b> ".$_FILES['uploadfile']['type']."</b></p>";
+    echo "<p>Размер загруженного файла в байтах:<b> ".$_FILES['uploadfile']['size']."</b></p>";
+    echo "<p>Временное имя файла: <b>".$_FILES['uploadfile']['tmp_name']."</b></p>";
+*/
+}
+?>
+
+<?php
+SYS::varDump($_POST,__FILE__,__LINE__,"POST");
+
+if($com !== "add"){
+$dir  = $full_dir;
+$files = scandir($dir);
+foreach ($files as $file){
+
+    if($file == "." || $file == ".."){}
+	else{
+
+$deleting_file = SITE_PATH . $item_dir . $doc_dir ."/". $file;	
+
+
+
+	
+	?>
+		<nobr><a href='<?=$item_dir?><?=$doc_dir?>/<?=$file?>' style='color:blue;' target='_blank'><?=$file?></a>
+<?if($_SESSION['user_level'] >= 6){?>
+		<form action="" method="post">
+                   <input type="hidden" name="del_file" value="<?=$deleting_file?>" />
+                   <input type="submit" value="удалить" />
+                </form>
+<?}?>
+		</nobr>
+		
+		 <br />
+	<?}
+    
+}
+}
+?>
+<?//////////// /UPLOAD FILES ///////////////////?>
+				</fieldset>		
+		</td>
+		
+	</tr>	
+</table>
+<hr style="height:10px" />
+<!-- ************************************************************* -->
+
+	
+

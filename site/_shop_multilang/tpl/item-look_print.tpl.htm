@@ -1,0 +1,150 @@
+<?
+        if(file_exists(SITE_PATH."/userfiles/product-image/".$item_data["1Cid"].".jpg")){
+		    $img1="/userfiles/product-image/".$item_data["1Cid"].".jpg";
+		}
+		else{
+		    $img1=SHOP_ITEM_IMG_PATH."/".$item_data['id']."/1m.png";
+            
+		}
+// ************************ PRICE ***********************		
+$price_roznica = Price::getPrice($item_data['postavschik'],$item_data['price_roznica'],$item_data['price_diler'],$item_data['p1']);
+if($price_roznica!=0){
+    $col = "#684302";
+    $price_roznica = $price_roznica." ".CURRENCY;
+}else
+{
+    $col = "#636060";
+    $price_roznica = SHOP_SITE_NOTE_ON_REQUEST; // По запросу
+}
+// ************************ / PRICE ***********************		
+
+if($item_data['desc_short'] !== ""){
+    $descrip = $item_data['desc_short'];
+}
+else{
+    $descrip = $item_data['desc_full'];
+}
+
+if($_SESSION['user_level']>2){
+    $caption_pr = '<input style="font-size:24px;width:100%;text-align:center;border:0px;" type="text" value="'.$item_data['caption'].'" />'; // Название
+    $price_pr = '<input style="font: 31px Arial;color:'.$col.';width:250px;text-align:right;border:0px;" type="text" value="'.$price_roznica.'" />';
+    $desc_pr = '<div class="desc3" id="itemdescshort" style="color:black;margin-bottom:12px;padding:20px;text-align:left;">'.$descrip.'</div>';
+}
+else{
+    $caption_pr = $item_data['caption']; // Название
+    $price_pr = '<span style="font: 31px Arial;color:'.$col.';" id="itemprice">'.$price_roznica.'</span>';
+    $desc_pr = '<div class="desc3" id="itemdescshort" style="color:black;margin-bottom:12px;padding:20px;text-align:left;">'.$descrip.'</div>';
+}
+?>
+<style>
+.desc li{margin-left:20px;margin-bottom:7px;}
+#itemprice font{font: 27px Arial;color:black;}
+.foto{
+    width:500px;
+	
+}
+.minifoto{
+	cursor:pointer;
+    width:120px;
+}
+
+#wrap_print_page{
+    text-align:center;
+    padding:15px;
+}
+</style>
+
+<div id="wrap_print_page">
+    <div>
+        <span style="font-weight:900;font-size:24px;">Коммерческое предложение</span>
+        <span style="float:right"><?=date("d.m.Y")?></span>
+        <div style="height:10px;"></div>
+        <div><?=$caption_pr?></div>
+            
+    </div>
+    <table style="width:100%">
+        <tr style="vertical-align:top">
+            <td style="width:500px;">
+                <img class="r20" style="width:450px;" alt="" src="<?=$img1?>" />
+            </td>
+            <td style="float:right;">
+                
+<!-- ****************** PRICE ************* -->
+
+    <table style="width: 100%;" cellpadding="0" cellspacing="0">
+        <tr>
+	    <td valign="top" style="padding-top:12px;text-align:right;">
+                <div><b><?=SHOP_SITE_NOTE_PRICE?> :</b></div>
+                <div><?=$price_pr?></div>
+            </td>
+	</tr>
+    </table>
+<!-- **************** /PRICE *********************** -->                
+            </td>
+        </tr>
+    </table>
+    
+    <div>
+<?//if($item_data["desc_short"] !== ""){?>
+        <div class="br_10"></div>
+        <h2>Описание</h2>
+        <?=$desc_pr?>
+<?//}?>
+<!--
+<?if($item_data["desc_full"] !== ""){?>
+    <h2>Описание</h2>
+	<?//$item_data["desc_full"] = strip_tags($item_data["desc_full"],"<div>,<p>,<a>,<img>,<iframe>");?>
+    <div class="desc_special"><?=$item_data["desc_full"]?></div>
+	<script>itemDesc['default']="<?=trim(str_replace('"',"'",str_replace(array("\r\n", "\r", "\n"),'',$item_data['desc_full'])))?>"</script>
+<?}?>
+-->
+    </div>
+    
+
+
+
+<?////////////////////  DESCRIPTION   ////////////////////////////?>
+<!--<style>
+#tab2, #tab3 {position: fixed; }
+
+.menu1 > a,
+.menu1 #tab2:target ~ a:nth-of-type(1),
+.menu1 #tab3:target ~ a:nth-of-type(1),
+.menu1 > div { padding: 5px; border: 1px solid #aaa;  margin-right:2px;}
+
+.menu1 > a { line-height: 28px; background: #fff; text-decoration: none; }
+
+#tab2,
+#tab3,
+.menu1 > div,
+.menu1 #tab2:target ~ div:nth-of-type(1),
+.menu1 #tab3:target ~ div:nth-of-type(1) {display: none; }
+
+.menu1 > div:nth-of-type(1),
+.menu1 #tab2:target ~ div:nth-of-type(2),
+.menu1 #tab3:target ~ div:nth-of-type(3) { display: block; }
+
+.menu1 > a:nth-of-type(1),
+.menu1 #tab2:target ~ a:nth-of-type(2),
+.menu1 #tab3:target ~ a:nth-of-type(3) { border-bottom: 2px solid #fff;}
+</style>
+<div class="menu1" style="text-align:left;padding:10px;">
+  <br id="tab2"/><br id="tab3"/>
+  
+<?if($item_data["desc_short"] !== ""){?><a href="#tab1" class="r5">Комплектация</a><?}?>
+<?if($item_data["desc_full"] !== ""){?><a href="#tab2" class="r5"><?=SHOP_SITE_DESCRIPTION?></a><?}?>
+<?if($item_data["p6"] !== ""){?><a style="color:#b77dd4;font-weight:900;" href="#tab3" class="r5"><?=SHOP_SITE_PRESENT?></a><?}?>
+
+<?if($item_data["desc_short"] !== ""){?><div id="itemdescshort" style="color:black;margin-bottom:12px;padding:10px;"><?=$item_data['desc_short']?></div><script>itemDescShort['default']="<?=trim(str_replace('"',"'",str_replace(array("\r\n", "\r", "\n"),'',$item_data['desc_short'])))?>"</script><?}?>
+<?if($item_data["desc_full"] !== ""){?><div id="itemdesc" style="color:black;margin-bottom:12px;padding:10px;"><?=$item_data["desc_full"]?></div><script>itemDesc['default']="<?=trim(str_replace('"',"'",str_replace(array("\r\n", "\r", "\n"),'',$item_data['desc_full'])))?>"</script><?}?>
+<?if($item_data["p6"] !== ""){?><div style="margin-bottom:12px;padding:10px;"><?=$item_data["p6"]?></div><?}?>
+</div>
+
+<br /><br /><br />-->
+<?////////////////////  /DESCRIPTION   ////////////////////////////?>
+
+<!-- ************************************************ -->
+
+<div class="br_20"></div>
+<div class="attention" style="margin:20px;"><?=SHOP_SITE_ATTENTION_COLOR?></div>
+</div>

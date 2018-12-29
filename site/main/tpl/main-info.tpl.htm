@@ -1,0 +1,10 @@
+<h1 style="line-height:100%;"><?=$main_info['caption']?></h1>
+<div class="br_10"></div>
+<?
+$main_info["desc_short"] = strip_tags($main_info["desc_short"],"<div>,<p>,<a>,<img>,<iframe>");
+$main_info["desc_full"] = strip_tags($main_info["desc_full"],"<div>,<p>,<a>,<img>,<iframe>");
+?>
+    <div class="desc_special">
+	    <div><?=$main_info["desc_full"]?></div>
+	</div>
+</div>

@@ -1,0 +1,79 @@
+<?
+//$_SESSION['grid_list'] = "list";
+//$_SESSION['grid_list'] = "grid";
+?>
+
+<div class="polosa"><a href="../<?=$all_tag_list[str_replace(";","",$tag2_data['connect'])]['seolink']?>"><?=$all_tag_list[str_replace(";","",$tag2_data['connect'])]['caption']?></a> » <?=$tag2_data['caption']?></div>
+
+<div class="wrap_catalog">
+
+<div style="float:right;">
+    <a href="/grid/" style=""><img src="/design/img/grid.png" style="width:30px"></a>
+    <a href="/list/" style=""><img src="/design/img/list.png" style="width:30px"></a>
+</div>
+<div class="both"></div>
+
+<?if($item_list!=NULL){
+	foreach($item_list as $key=>$val){
+        
+		if(file_exists(SITE_PATH."/userfiles/product-image/".$val["1Cid"].".jpg")){
+		    $img1="/userfiles/product-image/".$val["1Cid"].".jpg";
+		}
+		else{
+		    $img1=SHOP_ITEM_IMG_PATH."/".$val["id"]."/1m.png";
+		}
+		
+		if(isset($val["seolink"]) && $val["seolink"] !== ""){
+		    $val["seolink"] = Text::cutStringToSeolink($val["seolink"]);
+		}
+		
+		$a_href = "/".$GLOBALS["mod"]."/".$tag0_data['seolink']."/".$tag1_data['seolink']."/".$tag2_data['seolink']."/".$val["id"]."-".$val["seolink"];
+		$a_print = "/".$GLOBALS["mod"]."/".$tag0_data['seolink']."/".$tag1_data['seolink']."/".$tag2_data['seolink']."/".$val["id"]."-".$val["seolink"]."/print/";
+		$fancy =  "";
+		
+		$kod = $val["1Cid"];
+		$brand = $val["brand"];
+		
+		$wr_pr = "";  
+                $pr = "";
+		if($val['good_price'] == 1){ // Наложение на изо надписи "Распродажа", "Хорошая цена" и т.д. 
+                    $wr_pr = "bestprice";  
+                    $pr = NOTE_GOOD_PRICE;  
+                }
+                if($val['sell_out'] == 1){
+                    $wr_pr = "sale";  
+                    $pr = NOTE_SALE;
+                }
+                
+                if($_SESSION['grid_list'] == "grid"){
+                    $caption = substr(trim($val["caption"]), 0, 50);
+                    $description = "";
+                }
+                else if($_SESSION['grid_list'] == "list"){
+                    $caption = trim($val["caption"]);
+//                    $description = substr(trim($val["desc_short"]), 0, 500);
+                    
+                    $description = trim($val["desc_short"]);
+                    $description = strip_tags($description);
+                    $description = substr($description, 0, 750);
+                    $description = rtrim($description, "!,.-");
+                    $description = substr($description, 0, strrpos($description, ' '));
+                    $description = $description.".. ";
+                    
+                }
+                
+        if(!file_exists(getenv("DOCUMENT_ROOT").$img1))$img1="/design/img/noimage_740x480.png";
+?>	
+    
+        
+            <?include SITE_PATH."/site/inc/item-list-price_".$_SESSION['grid_list'].".tpl.htm";?>
+
+    
+<?    }
+}?>
+    <div class="both br_10"></div>
+<?if(isset($tag2_data['desc_full']) && $tag2_data['desc_full'] !== ""){?>
+    <div><?=$tag2_data['desc_full']?></div>
+<?}?>
+    <div class="both br_10"></div>
+</div>

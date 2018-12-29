@@ -1,0 +1,106 @@
+<?
+if(isset($_SERVER['REQUEST_URI'])){
+    $seodata = explode("/",$_SERVER['REQUEST_URI']);
+    $mod = $seodata[1];
+    $tag0 = $seodata[2];
+    $tag1 = $seodata[3];
+    $tag2 = $seodata[4];    
+    $param = $seodata[5];  
+    $print = $seodata[6];
+}
+?>
+
+<div class="polosa"><a href="../<?=$all_tag_list[str_replace(";","",$tag2_data['connect'])]['seolink']?>"><?=$all_tag_list[str_replace(";","",$tag2_data['connect'])]['caption']?></a> » <a href="/shop/<?=$tag0_data['seolink']?>/<?=$tag1_data['seolink']?>/<?=$tag2_data['seolink']?>"><?=$tag2_data['caption']?></a></div>
+
+<div class="wrap_catalog">
+
+<div style="float:right;">
+<?////////////////////////////?>
+<?
+$tag2_id = Shop::getTagIdBySeolink($tag2,"2"); // Получаем id tag2
+$brand_list = Shop::getBrand($tag2_id['id']);
+SYS::varDump($brand_list,__FILE__,__LINE__,"Brands");
+if(isset($brand_list) && $brand_list !== ""){
+
+    foreach($brand_list as $br_k=>$br_v){
+	$br_v[1] = str_replace(";","",$br_v[1]);
+?>
+    <a style="font-size:10px;" href="/shop/<?=$tag0_data['seolink']?>/<?=$tag1_data['seolink']?>/<?=$tag2_data['seolink']?>/brand-<?=$br_v[0]?>"><?=strtoupper($br_v[0])?></a>
+<?
+	}
+}
+//SYS::varDump($brand_list,__FILE__,__LINE__,"BRANDS");
+?>
+<?////////////////////////////?>
+    <a href="/grid/" style=""><img src="/design/img/grid.png" style="width:30px"></a>
+    <a href="/list/" style=""><img src="/design/img/list.png" style="width:30px"></a>
+</div>
+<div class="both br_10"></div>
+
+<?if($item_list!=NULL){
+	foreach($item_list as $key=>$val){
+        
+		if(file_exists(SITE_PATH."/userfiles/product-image/".$val["1Cid"].".jpg")){
+		    $img1="/userfiles/product-image/".$val["1Cid"].".jpg";
+		}
+		else{
+		    $img1=SHOP_ITEM_IMG_PATH."/".$val["id"]."/1m.png";
+		}
+		
+		if(isset($val["seolink"]) && $val["seolink"] !== ""){
+		    $val["seolink"] = Text::cutStringToSeolink($val["seolink"]);
+		}
+		
+		$a_href = "/".$GLOBALS["mod"]."/".$tag0_data['seolink']."/".$tag1_data['seolink']."/".$tag2_data['seolink']."/".$val["id"]."-".$val["seolink"];
+		$a_print = "/".$GLOBALS["mod"]."/".$tag0_data['seolink']."/".$tag1_data['seolink']."/".$tag2_data['seolink']."/".$val["id"]."-".$val["seolink"]."/print/";
+		$fancy =  "";
+		
+		$kod = $val["1Cid"];
+		$brand = $val["brand"];
+		
+		$wr_pr = "";  
+                $pr = "";
+		if($val['good_price'] == 1){ // Наложение на изо надписи "Распродажа", "Хорошая цена" и т.д. 
+                    $wr_pr = "bestprice";  
+                    $pr = NOTE_GOOD_PRICE;  
+                }
+                if($val['sell_out'] == 1){
+                    $wr_pr = "sale";  
+                    $pr = NOTE_SALE;
+                }
+                
+                if($_SESSION['grid_list'] == "grid"){
+                    $caption =  strip_tags($caption);
+                    $caption = substr(trim($val["caption"]), 0, 100);
+                    $caption = rtrim($caption, "!,.-");
+                    $caption = substr($caption, 0, strrpos($caption, ' '));
+                    $description = "";
+                }
+                else if($_SESSION['grid_list'] == "list"){
+                    $caption = trim($val["caption"]);
+//                    $description = substr(trim($val["desc_short"]), 0, 500);
+                    
+                    $description = trim($val["desc_short"]);
+                    $description = strip_tags($description);
+                    $description = substr($description, 0, 750);
+                    $description = rtrim($description, "!,.-");
+                    $description = substr($description, 0, strrpos($description, ' '));
+                    $description = $description;
+                    
+                }
+                
+        if(!file_exists(getenv("DOCUMENT_ROOT").$img1))$img1="/design/img/noimage_740x480.png";
+?>	
+    
+        
+            <?include SITE_PATH."/site/inc/item-list-price_".$_SESSION['grid_list'].".tpl.htm";?>
+
+    
+<?    }
+}?>
+    <div class="both br_10"></div>
+<?if(isset($tag2_data['desc_full']) && $tag2_data['desc_full'] !== ""){?>
+    <div><?=$tag2_data['desc_full']?></div>
+<?}?>
+    <div class="both br_10"></div>
+</div>

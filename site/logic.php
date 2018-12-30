@@ -1,15 +1,16 @@
 <?php
+echo 'rrr';
 session_start();
 
 if(isset($_SESSION['user_level']) && $_SESSION['user_level'] == 9){
     ini_set('display_errors', 'On'); // сообщения с ошибками будут показываться
     error_reporting(E_ALL); // E_ALL - отображаем ВСЕ ошибки
-    ini_set('display_errors', 'Off'); // теперь сообщений НЕ будет
+//    ini_set('display_errors', 'Off'); // теперь сообщений НЕ будет
 }
 else{
     ini_set('display_errors', 'On'); // сообщения с ошибками будут показываться
     error_reporting(E_ALL); // E_ALL - отображаем ВСЕ ошибки
-    ini_set('display_errors', 'Off'); // теперь сообщений НЕ будет
+//    ini_set('display_errors', 'Off'); // теперь сообщений НЕ будет
 }
 
 

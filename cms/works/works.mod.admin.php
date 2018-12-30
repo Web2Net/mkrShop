@@ -65,6 +65,10 @@ class Works{
 
 	    if($com == "view"){
 	        
+            $now_year = date("Y");
+            $now_month = date("m");
+            $now_date = date("d");
+
             if($type == "my_works" && isset($ingener) && $ingener !== ""){
                 if($ingener == "mkr"){
                     $row=Works::getList("`archiv` = 'N' AND `trash` = 'N'");
@@ -101,9 +105,6 @@ class Works{
             if($type == "n_otgryzka"){$row=Works::getList("`otgryzka` = 'N' AND `archiv` = 'N' AND `trash` = 'N'".$ingener_privyazka."");}
             if($type == "prioritet"){$row=Works::getList("`prioritet` = 'Y' AND `archiv` = 'N' AND `trash` = 'N'".$ingener_privyazka."");}
             if($type == "srochno_y"){$row=Works::getList("`srochno` = 'Y' AND `doc` = 'N' AND `archiv` = 'N' AND `trash` = 'N'".$ingener_privyazka."");}
-            
-            
-            
             if($type == "archiv"){
                 if(isset($_GET['year']) && $_GET['year'] !== ""){
                     $archiv_year = " AND `date_create` LIKE '%{$_GET['year']}%'";
@@ -114,26 +115,22 @@ class Works{
 
                 $row=Works::getListArchiv("`archiv` = 'Y' {$archiv_year}");
             }
-				
-            $now_year = date("Y");
-            $now_month = date("m");
-            $now_date = date("d");
-            
-            if($type == "month"){
+			if($type == "month"){
                 $row=Works::getList("`month_create` = '".$year."-".$month_n."' AND `archiv` = 'N' AND `trash` = 'N'".$ingener_privyazka."");
             }
-
-
 
 // Поиск по Клиенту	
             if(isset($_GET['client'])){			
 		        $get_client = $_GET['client'];
 	        }
             if($type == "client"){
-                $row = Works::getList("`client` LIKE '%{$get_client}%' OR `id` LIKE '%{$get_client}%'");
+                //$row = Works::getList("`client` LIKE '%{$get_client}%' OR `id` LIKE '%{$get_client}%'");
+                $row = Works::clientSearch($get_client);
             // По прилетевшему имени юзера из табл. item_user получаем список подходящих id-шек                
             //Works::getIdClientByShortCaption($get_client);
             }
+
+            
 // /Поиск по Клиенту	              
             /*
                         if($type == "calendar"){
@@ -372,6 +369,10 @@ Works::parovozik($work_data['client'], $client_edrpoy, $id_zayavki);
         }
 //SYS::varDump($_SESSION['ingener'],__FILE__,__LINE__,"SESSION");			
         return $c_cont;
+    }
+
+    static function clientSearch($get_client){
+    	return $row = Works::getList("`client` LIKE '%{$get_client}%' OR `id` LIKE '%{$get_client}%'");
     }
 
     static function getClientName($id){

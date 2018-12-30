@@ -121,16 +121,13 @@ class Works{
 
 // Поиск по Клиенту	
             if(isset($_GET['client'])){			
-		        $get_client = $_GET['client'];
+		        //$get_client = $_GET['client'];
+		        $get_client = Works::setClientName($_GET['client']);
 	        }
+	        
             if($type == "client"){
-                //$row = Works::getList("`client` LIKE '%{$get_client}%' OR `id` LIKE '%{$get_client}%'");
                 $row = Works::clientSearch($get_client);
-            // По прилетевшему имени юзера из табл. item_user получаем список подходящих id-шек                
-            //Works::getIdClientByShortCaption($get_client);
             }
-
-            
 // /Поиск по Клиенту	              
             /*
                         if($type == "calendar"){
@@ -369,6 +366,10 @@ Works::parovozik($work_data['client'], $client_edrpoy, $id_zayavki);
         }
 //SYS::varDump($_SESSION['ingener'],__FILE__,__LINE__,"SESSION");			
         return $c_cont;
+    }
+
+    static function setClientName($client){
+    	return $client = $client;
     }
 
     static function clientSearch($get_client){

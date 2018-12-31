@@ -1,5 +1,4 @@
 <?php
-echo 'rrr';
 session_start();
 
 if(isset($_SESSION['user_level']) && $_SESSION['user_level'] == 9){

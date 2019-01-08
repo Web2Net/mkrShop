@@ -1,4 +1,4 @@
-<?
+<?php
 ini_set('display_errors', 'On'); // сообщения с ошибками будут показываться
 error_reporting(E_ALL); // E_ALL - отображаем ВСЕ ошибки
 //$value = $var[$key]; // пример ошибки
@@ -30,5 +30,3 @@ if($_SERVER['REQUEST_URI'] !== "/cart/incart/?display=ajax"){
 // используя флаг FILE_APPEND для дописывания содержимого в конец файла
 // и флаг LOCK_EX для предотвращения записи данного файла кем-нибудь другим в данное время
 file_put_contents($file, $str, FILE_APPEND | LOCK_EX);
-
-?>

@@ -20,7 +20,7 @@ class Price
 
 
 
-	    $tpl_item = new AdmModTpl;
+	    $tpl_item=new AdmModTpl;
         
         foreach ($_REQUEST as $key=>$val){
             $str="$".$key."=\$val;";
@@ -639,21 +639,16 @@ meta_d
         return round($price_final, 2);
     }
 
-    static function checkAndRepairBreakePrice($price){ // проверяем и "ремонтируем" битые цены
-    	if(!isset($price) || !is_numeric($price) || $price == "" || $price == NULL || $price == "0" ){ 
-            return $price = "0,00"; // устанавливаем "0,00" 
-        }
-        else{
-        	return $price;
-        }
-    }
-
     static function checkPrice($ddp, $monitor, $price_diler, $price_roznica){ // Проверка на соответствие цены по входу и рекомендованой
         
-        $price_diler = Price::checkAndRepairBreakePrice($price_diler); // проверяем и "ремонтируем" битые цены
-        $price_roznica = Price::checkAndRepairBreakePrice($price_roznica); // проверяем и "ремонтируем" битые цены
+        if(!isset($price_diler) || !is_numeric($price_diler) || $price_diler == "" || $price_diler == NULL || $price_diler == "0" ){ // проверяем входящую цену 
+            $price_diler = "0,00"; // и устанавливаем "0,00" 
+        }
+        if(!isset($price_roznica) || !is_numeric($price_roznica) || $price_roznica == "" || $price_roznica == NULL || $price_roznica == "0" ){ // проверяем рекомендованую цену 
+            $price_roznica = "0,00"; // и устанавливаем "0,00" 
+        }
 
-        if($price_diler == "0,00" || $price_roznica == "0,00"){
+        if($price_diler == "0,00" || $price_diler == "0.00"){
             $price_final = "0,00";
         }
         else{

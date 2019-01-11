@@ -614,7 +614,6 @@ meta_d
         else{
             if($postavschik == "erc"){
                 $price_final = Price::checkPrice($ddp, $monitor, $price_diler, $price_rozn);
-                //$price_final = $price_rozn;
             }
             elseif($postavschik == "mti"){
                 $price_final = ($price_diler + $price_diler/100*PROCENT_NADBAVKI)*KURS_USD;

@@ -116,13 +116,14 @@ class SYS{
     */
     static function deleteEmptyFiles($dir){
         $dirhandle = opendir($dir);
-		  $filename = "";
+		$filename = "";
 		    
-		  while(($filename = readdir($dirhandle)) !== false)
-		  if (filesize($filename) == 0)
-		      unlink($dir . $filename);
-		    
-		  closedir($dirhandle);
+		while(($filename = readdir($dirhandle)) !== false){
+		    if (filesize($filename) == 0){
+		        unlink($dir . $filename);
+            }
+        }    
+		closedir($dirhandle);
     }
 
 }

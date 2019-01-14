@@ -108,7 +108,7 @@ if(isset($seolink))
 */
 
 class SiteModTpl extends Tpl{
-    function SiteModTpl (){
+    function __construct(){
 //$this->template_dir = SITE_PATH.'/site/'.$GLOBALS["mod"].'/tpl';
         if(isset($_SESSION["display"]) && $_SESSION["display"]=="mobi"){
 		    $this->template_dir = SITE_PATH.'/site/'.$GLOBALS["mod"].'/tpl/mobi';	

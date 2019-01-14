@@ -3,28 +3,29 @@
 	$GLOBALS['VARSQL_NUM']=1;
 	$GLOBALS['DEBUG']='';
 	$GLOBALS['DEBUG_SQL']='';	
-class SYS 
-{
+class SYS{
 	
-    function requestToString()
-    {
+    function requestToString(){
         $str="";
-        foreach ($_REQUEST as $key=>$val)
-        {
-            $str.='$'.$key.'="'.$val.'";';
+        foreach ($_REQUEST as $key => $val){
+            $str .= '$' . $key . '="' . $val . '";';
         }
         return $str;
     }
-    
-    static function varDump($var,$filename,$line,$metka='')
-    { 
+
+    static function varDump($var,$filename,$line,$metka=''){ 
+        return $var;
+    }
+
+    /*
+    static function varDump($var,$filename,$line,$metka=''){ 
         if(isset($_SESSION['user_level']) && $_SESSION['user_level'] == "9"){
           ob_start(); 
     $vd_num=$GLOBALS['VARDUMP_NUM'];
     	?>
     	<div id='sys<?=$vd_num?>' style='background-color:red;padding:5px;margin-top:7px;color:white;cursor:pointer;width:100px;'>&nbsp; <?=$metka!=''?$metka:'varDump '.$vd_num?> &nbsp;</div>
         <div id='system<?=$vd_num?>' style='display:none;padding:15px 25px;max-height:500px;overflow:auto;text-align:left;border:7px solid red;background:#fff;width:900px;'><div style='color:blue;font-size:12px;line-height:18px;'><?=$filename?> (<?=$line?>)</div>
-<pre style="line-height:24px;font-size:14px;color:black"><?var_dump($var);?></pre>
+        <pre style="line-height:24px;font-size:14px;color:black"><?var_dump($var);?></pre>
         </div><script>$(document).ready(function(){$('#sys<?=$vd_num?>').click(function () {$('#system<?=$vd_num?>').toggle(200);});});</script><?
         $ob_text=ob_get_contents();
     ob_end_clean();
@@ -35,9 +36,9 @@ class SYS
     $GLOBALS['VARDUMP_NUM']=$vd_num+1;
         }
     }
-    
-    static function varSQL($query,$filename,$line,$metka='')
-    {   
+    */
+    /*
+    static function varSQL($query,$filename,$line,$metka=''){   
         if(isset($_SESSION['user_level']) && $_SESSION['user_level'] == "9"){
         ob_start(); 
     $vd_num=$GLOBALS['VARSQL_NUM'];
@@ -51,7 +52,7 @@ class SYS
         while ($result = mysql_fetch_assoc ($raw)){
 		$itog[] = $result;
 		}?>
-<pre style="line-height:24px;font-size:14px;color:black"><?var_dump($itog);?></pre>
+        <pre style="line-height:24px;font-size:14px;color:black"><?var_dump($itog);?></pre>
         </div><script>$(document).ready(function(){$('#varsql<?=$vd_num?>').click(function () {$('#sql<?=$vd_num?>').toggle(200);});});</script><?
         $ob_text=ob_get_contents();
     ob_end_clean();
@@ -72,7 +73,8 @@ class SYS
     $GLOBALS['VARSQL_NUM']=$vd_num+1;
         }
     }
-    
+    */
+    /*
     static function varSQLLog($metka='')
     {   
         if(isset($_SESSION['user_level']) && $_SESSION['user_level'] == "9"){
@@ -81,14 +83,18 @@ class SYS
     	?>
     	<div id='varsqllog<?=$vd_num?>' style='background-color:blue;padding:5px;margin-top:7px;color:white;cursor:pointer;width:100px;'>&nbsp; <?=$metka!=''?$metka:'varDump'.$vd_num?> &nbsp;</div>
         <div id='sqllog<?=$vd_num?>' style='display:none;padding:15px 25px;max-height:450px;overflow:auto;text-align:left;border:7px solid blue;background:#fff;width:900px;'><div style='color:blue;font-size:12px;line-height:18px;'><?//=$filename?> <?//="(".$line.")"?></div>
-<pre style="margin:0px 0px 0px -195px;font-size:14px;line-height:19px;"><?
-$mainFile = @file(getenv("DOCUMENT_ROOT")."/magic/MySQL.log");
-$i = 0;$html='';
-while (!empty ($mainFile[$i])){
-$html.= stripslashes($mainFile[$i]);
-$i = $i + 1; }
-echo $html;
-?></pre>
+    
+        <pre style="margin:0px 0px 0px -195px;font-size:14px;line-height:19px;">
+            <?
+            $mainFile = @file(getenv("DOCUMENT_ROOT")."/magic/MySQL.log");
+            $i = 0;$html='';
+            while (!empty ($mainFile[$i])){
+            $html.= stripslashes($mainFile[$i]);
+            $i = $i + 1; }
+            echo $html;
+            ?>
+        </pre>
+        
         </div><script>$(document).ready(function(){$('#varsqllog<?=$vd_num?>').click(function () {$('#sqllog<?=$vd_num?>').toggle(200);});});</script><?
         $ob_text=ob_get_contents();
     ob_end_clean();
@@ -107,9 +113,8 @@ echo $html;
     $GLOBALS['DEBUG'].=str_replace("=>\n "," =>",$ob_text); 
      }
     }    
-    
-    static function deleteEmptyFiles($dir) 
-    {
+    */
+    static function deleteEmptyFiles($dir){
         $dirhandle = opendir($dir);
 		  $filename = "";
 		    
@@ -119,7 +124,5 @@ echo $html;
 		    
 		  closedir($dirhandle);
     }
- 
 
 }
-?>

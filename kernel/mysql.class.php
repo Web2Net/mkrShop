@@ -1,14 +1,13 @@
 <?php
 $GLOBALS["SQL_DEBUG"]="";
 
-$db = mysql_connect(DB_HOST, DB_USER, DB_PASS) or die("Подключение к базе данных не состоялось!"); 
+$db = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die("Подключение к базе данных не состоялось!"); 
 //var_dump($db);
-mysql_select_db(DB_NAME,$db);
+//mysql_select_db(DB_NAME,$db);
 //mysql_query("SET NAMES latin1");
 mysql_query("SET NAMES utf8");
 
-class mysql
-{
+class mysql{
 
 	var $table;
     var $prefix="";

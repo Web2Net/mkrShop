@@ -32,7 +32,7 @@
     define('DB_HOST', 'localhost'); 
     define('DB_NAME', 'mkrshop');
     define('DB_USER', 'root');   
-    define('DB_PASS', '');  
+    define('DB_PASS', 'bmnF9YWXz');  
   
     
     define('USER_IP', getenv ("REMOTE_ADDR"));

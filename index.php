@@ -1,4 +1,7 @@
 <?php
+
+//phpinfo();
+
 ini_set('display_errors', 'On'); // сообщения с ошибками будут показываться
 error_reporting(E_ALL); // E_ALL - отображаем ВСЕ ошибки
 //$value = $var[$key]; // пример ошибки

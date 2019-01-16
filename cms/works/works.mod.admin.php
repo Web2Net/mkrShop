@@ -1,13 +1,19 @@
 <?
 class Works{
     static function admWorks(){
-	
-        if(isset($_GET['year']) && $_GET['year'] !== ""){
-            $_SESSION['works_year'] = $_GET['year'];
-        }
-        else{
-            $_SESSION['works_year'] = date("Y");
-        }
+/*	
+SYS::varDump($_POST, __FILE__, __LINE__, "POST"); 
+
+if($_POST !== ""){
+	$f = array();
+	foreach($_POST as $pk => $pv){
+		$_SESSION['fdffd'] = $f[$pk] = $pv;
+	}
+} 
+*/      
+
+        
+        Works::getWorksYear($_GET['year']); // Загоняем в сессию год. Либо текущий, либо какой выбрал юзер при фильтре заявок
 
 	    include (SITE_PATH . "/cms/inc/eval.php");
         $tpl_item = new AdmModTpl;
@@ -121,7 +127,6 @@ class Works{
 
 // Поиск по Клиенту	
             if(isset($_GET['client'])){			
-		        //$get_client = $_GET['client'];
 		        $get_client = Works::setClientName($_GET['client']);
 	        }
 	        
@@ -173,7 +178,7 @@ class Works{
 	                $arrPrintChecked[] = Works::getList("`id` = '{$id_v}'");
                 }					  
 		        $tpl_item->assign('works_print_list',$arrPrintChecked);	
-                    $c_cont=$tpl_item->get("works-print-checkBox");
+                    $c_cont = $tpl_item->get("works-print-checkBox");
 	        }
 	        if($print_variant == "otchet"){
 		        $row=Works::getList("(`ingener` = '".$ingener."' AND `responsible_ingener` <> '' AND `trash` = 'N' AND `archiv` = 'N') AND (`zdelano` = 'Y' OR `otgryzka` = 'Y')");
@@ -213,6 +218,10 @@ class Works{
  
 // Работа с БД Клиентов клиента
             if(isset($arr_value["client"]) && $arr_value["client"] !== ""){  // Если прилетело заполненное поле Клиент
+	           //$arr_value = Works::clientData($arr_value["client"]);
+
+
+
 	           $is_client = mysql::checkUniqRow("user_item", "short_caption", $arr_value["client"]); // Проверяем на уникальность "Кодового Имени Клиента" (short_caption) в табл. user_item
 //exit("update");							
 	            if(!isset($is_client) || $is_client == NULL){ // Если совпадение не обнаружено
@@ -224,13 +233,19 @@ class Works{
 		            $arr_value['client_id'] = $client_is['id']; // id-шка клиента
                     $arr_value['client_edrpoy'] = $client_is['edrpoy']; // ЕДРПОУ клиента
 	            }
+	            
 	        }
+
+
 // /Работа с БД Клиентов клиента
             
 // $content_letter = $arr_value['client']."<br />".$arr_value['content']."<br />".$arr_value['neispravnost'];             
 
             $arr_value['date_create']=isset($arr_value['date_create']) && $arr_value['date_create']!=""?$arr_value['date_create']:date("Y-m-d")." ".$_SESSION['user_login'];
             
+
+
+
             if(isset($_POST['form__prioritet'])){            
 	    	    $arr_value['prioritet'] = Text::checkBoxProcess($arr_value['prioritet']);
 		        $arr_value['date_prioritet'] = date("Y-m-d")." ".$_SESSION['user_login'];
@@ -343,7 +358,10 @@ Works::parovozik($work_data['client'], $client_edrpoy, $id_zayavki);
                 if($com !== "nal" && $com !== "viezd"){
                     $arch['date_'.$com] = date("Y-m-d")." ".$_SESSION['user_login'];
                 }
-//$_SESSION['clnt_name'] = Works::getClientName($arr_value['client_id']);
+
+//$work_datas = Works::getWork($_GET['id']); // Получаем данные заявки по id-заявке
+//$clnt_name = Works::getClientName($work_datas['client_id']);
+
                 $arr_up_do_do = Works::getWork($id); // Выборка данных заявки до апдейта для записи в лог-файл
  
                 $db = new mysql;
@@ -368,6 +386,72 @@ Works::parovozik($work_data['client'], $client_edrpoy, $id_zayavki);
         return $c_cont;
     }
 
+
+///////////////////////////////////////// CLIENT ///////////////////////////////////
+    function getClientData($cl_id = "", $cl_edrpoy = "", $cl_name = "", $works_id = ""){
+        
+        if($cl_id !== ""){
+            $clientDatas = Works::getClientById($cl_id);
+        }
+        elseif($cl_edrpoy !== ""){
+            $clientDatas = Works::getClientByEdrpoy($cl_edrpoy);
+        }
+        elseif($cl_name !== ""){
+            $clientDatas = Works::getClientByName($cl_name);
+        }
+        elseif($works_id !== ""){
+            $clientDatas = Works::getClientByWorkId($works_id);
+        }
+        else{
+            $clientDatas = "Нет исходных данных для выборки данных клиента";
+        }
+        return $clientDatas;
+    }
+
+    static function getClientById($id){ // Получаем данные клиента по его id
+        $select = "";
+        $from = "user_item";
+        $where = "`id` = '{$id}'";
+        $sortby = "";
+
+        $db = new mysql;
+        $row = $db->origSelectSQL($select, $from, $where, $sortby);
+//SYS::varDump($row,__FILE__,__LINE__,"client_name");
+        return $row;
+    }
+    static function getClientByEdrpoy($edrpoy){ // Получаем данные клиента по его ЕДРПОУ
+        $select = "";
+        $from = "user_item";
+        $where = "`edrpoy` = '{$edrpoy}'";
+        $sortby = "";
+
+        $db = new mysql;
+        $row = $db->origSelectSQL($select, $from, $where, $sortby);
+//SYS::varDump($row,__FILE__,__LINE__,"client_name");
+        return $row;
+    }
+    static function getClientByName($name){ // Получаем данные клиента по его name
+        $select = "";
+        $from = "user_item";
+        $where = "`caption` = '{$name}'";
+        $sortby = "";
+
+        $db = new mysql;
+        $row = $db->origSelectSQL($select, $from, $where, $sortby);
+//SYS::varDump($row,__FILE__,__LINE__,"client_name");
+        return $row;
+    }
+//////////////////////////////////// /CLIENT //////////////////////////////////////////    
+
+    static function getWorksYear($works_year){
+    	if(isset($works_year) && $works_year !== ""){
+            $_SESSION['works_year'] = $works_year;
+        }
+        else{
+            $_SESSION['works_year'] = date("Y");
+        }
+    }
+
     static function setClientName($client){
     	return $client = $client;
     }
@@ -375,7 +459,21 @@ Works::parovozik($work_data['client'], $client_edrpoy, $id_zayavki);
     static function clientSearch($get_client){
     	return $row = Works::getList("`client` LIKE '%{$get_client}%' OR `id` LIKE '%{$get_client}%'");
     }
-
+/*
+    static function clientData($client]){
+    	$is_client = mysql::checkUniqRow("user_item", "short_caption", $client); // Проверяем на уникальность "Кодового Имени Клиента" (short_caption) в табл. user_item
+    	if(!isset($is_client) || $is_client == NULL){ // Если совпадение не обнаружено
+            Works::addNewClientByWorks($client); // Добавляем нового Клиента в табл. user_item
+            $arr_value['client_id'] = mysql_insert_id(); // Получаем ID нового клиента
+        }
+        else{  // Если совпадение обнаружено
+            $client_is = Works::getIdClientByShortCaption($client);  // Получаем ID существующего клиента
+            $arr_value['client_id'] = $client_is['id']; // id-шка клиента
+            $arr_value['client_edrpoy'] = $client_is['edrpoy']; // ЕДРПОУ клиента
+        }
+        return $arr_value[];
+    }
+*/
     static function getClientName($id){
     	$select="short_caption";
         $from="user_item";

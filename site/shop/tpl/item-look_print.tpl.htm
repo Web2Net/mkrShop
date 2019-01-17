@@ -29,6 +29,7 @@ if($_SESSION['user_level']>2){
     $caption_pr = '<input style="font-size:24px;width:100%;text-align:center;border:0px;" type="text" value="'.$item_data['caption'].'" />'; // Название
     $price_pr = '<input style="font: 31px Arial;color:'.$col.';width:250px;text-align:right;border:0px;" type="text" value="'.$price_roznica.'" />';
     $desc_pr = '<div class="desc3" id="itemdescshort" style="color:black;margin-bottom:12px;padding:20px;text-align:left;">'.$descrip.'</div>';
+//    $desc_pr = '<textarea class="desc3" id="itemdescshort" style="color:black;margin-bottom:12px;padding:20px;text-align:left;">' . $descrip . '</textarea>';
 }
 else{
     $caption_pr = $item_data['caption']; // Название
@@ -89,6 +90,13 @@ else{
         <div class="br_10"></div>
         <h2>Описание</h2>
         <?=$desc_pr?>
+<!--
+        <input class="desc3" style="font: 10pt Tahoma;width:100%;text-align:left;border:0px;" type="text" value="" />
+        <input class="desc3" style="font: 10pt Tahoma;width:100%;text-align:left;border:0px;" type="text" value="" />
+        <input class="desc3" style="font: 10pt Tahoma;width:100%;text-align:left;border:0px;" type="text" value="" />
+        <input class="desc3" style="font: 10pt Tahoma;width:100%;text-align:left;border:0px;" type="text" value="" />
+-->
+        <textarea class="desc3" rows="5" style="font: 10pt Tahoma;width:100%; text-align:left;border:0px;margin:0px 20px"></textarea>
 <?//}?>
 <!--
 <?if($item_data["desc_full"] !== ""){?>

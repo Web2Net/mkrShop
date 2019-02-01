@@ -393,7 +393,11 @@ elseif($_SESSION['lang']=="ru"){
         $valuta_nby = file_get_contents('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode='.$valuta.'&date='.$exchangedate.'&json');
         $data_valut_nby = json_decode($valuta_nby, true); // преобразование строки в формате json в ассоциативный массив
 SYS::varDump($data_valut_nby,__FILE__,__LINE__,"Курс НБУ");
-        return round($data_valut_nby[0]['rate'], 2); // Округление до сотых
+        
+        $value = round($data_valut_nby[0]['rate'], 2); // Округление до сотых
+        mandatoryShopSetting::insertTodayKyrsValut($valuta, $value);
+
+        return $value;
     }
 	
 	static function getKyrsValutNBY_privat($exchangedate, $valuta){
@@ -401,6 +405,35 @@ SYS::varDump($data_valut_nby,__FILE__,__LINE__,"Курс НБУ");
         $data_valut_nby = json_decode($valuta_nby, true); // преобразование строки в формате json в ассоциативный массив
 SYS::varDump($data_valut_nby,__FILE__,__LINE__,"Курс НБУ ПриватБанк");
         //return $data_valut_nby[0]['rate'];
+    }
+
+    static function insertTodayKyrsValut($valuta, $value){
+        $date_today = date("Y-m-d");
+        
+        $query = "SELECT * FROM `kyrs_valut` WHERE `caption` = '$valuta' && `date_` = '$date_today' LIMIT 1 ";
+        $res = mysql_query($query);
+        Mysql::queryError($res,$query);
+        $count = mysql_num_rows($res);
+
+SYS::varDump($count,__FILE__,__LINE__,"FFF");       
+        if($count == 0){
+            $query = "INSERT INTO kyrs_valut(caption, date_, nby) VALUES ('$valuta', '$date_today', '$value')";
+            $res = mysql_query($query);
+            Mysql::queryError($res,$query);
+        }
+        
+    }
+
+    static function getKyrsValutLastPeriod($valuta, $period){
+            $select = "";
+            $from = 'kyrs_valut';
+            $where = "`caption` = '$valuta'";
+            $sortby = "";
+
+            $db = new mysql;
+            $row = $db->origSelectSQL($select, $from, $where, $sortby, $period);
+    SYS::varDump($row,__FILE__,__LINE__,"gdgdgd");
+            return $row;
     }
 
 

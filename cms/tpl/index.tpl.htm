@@ -104,6 +104,7 @@ jQuery(function(){
 	<span style="font-size:14px;color:#000">1 &euro; = <?=KURS_EURO_NAC_BANK?> <?=CURRENCY?>.</span>
 	</td></tr></table>
 </td>
+
 <?//------------------------------- /KyrsValut -----------------------------------?>
 <!--
 <td>
@@ -227,36 +228,70 @@ $ye_1000 = 1000*KURS_USD;
 */
 ?>
 
-<table><tr><td>
+<table><tr style="vertical-align: top;"><td >
 <b>Курсы валют НБУ</b>
 <div>
     <form action="?mod=setting&com=change_kurs_usd_nb" method="post">
         1 <strong>$</strong> = <input class="adm_form_type_text" style="width:40px;" type="text" name="kurs_usd_nb" value="<?=KURS_USD_NAC_BANK?>" /> <?=CURRENCY?>. 
-        <input type="submit" value="?зменить">
+        <input type="submit" value="Изменить">
     </form> 
 </div>
 <div>
     <form action="?mod=setting&com=change_kurs_euro_nb" method="post">
         1 <strong>&euro;</strong> = <input class="adm_form_type_text" style="width:40px;" type="text" name="kurs_euro_nb" value="<?=KURS_EURO_NAC_BANK?>" /> <?=CURRENCY?>. 
-        <input type="submit" value="?зменить">
+        <input type="submit" value="Изменить">
     </form> 
 </div>
 </td>
+<td>&nbsp;</td>
+
+
 <td>
 <b>Курсы валют поставщиков</b>
 <div>
     <form action="?mod=setting&com=change_kurs_usd_erc" method="post">
         1 <strong>$</strong> = <input class="adm_form_type_text" style="width:40px;" type="text" name="kurs_usd_erc" value="<?=KURS_USD_ERC?>" /> <?=CURRENCY?>. 
-        <input type="submit" value="?зменить">
+        <input type="submit" value="Изменить">
     </form> 
 </div>
 <div>
     <form action="?mod=setting&com=change_kurs_usd_mti" method="post">
         1 <strong>$</strong> = <input class="adm_form_type_text" style="width:40px;" type="text" name="kurs_usd_erc" value="<?=KURS_USD_MTI?>" /> <?=CURRENCY?>. 
-        <input type="submit" value="?зменить">
+        <input type="submit" value="Изменить">
     </form> 
 </div>
-</td></tr></table>
+</td>
+
+<td>&nbsp;</td>
+<td>
+    <div style="font-weight: 900">EUR НБУ</div>
+<?php
+    $k_eur = mandatoryShopSetting::getKyrsValutLastPeriod("EUR", "7");
+    foreach($k_eur as $k => $v){
+?>
+    <div><?=$v['date_']?> - <?=$v['nby']?></div>
+<?php    	
+    }
+?>
+</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>
+    <div style="font-weight: 900">USD НБУ</div>
+<?php
+    $k_usd = mandatoryShopSetting::getKyrsValutLastPeriod("USD", "7");
+    foreach($k_usd as $k => $v){
+?>
+    <div><?=$v['date_']?> - <?=$v['nby']?></div>
+<?php    	
+    }
+?>
+</td>
+
+
+
+</tr>
+</table>
 <?//$listChangeCurrency = UserItem::getUserChangeCurrency();?>
 <!--
 <br>

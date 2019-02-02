@@ -1,13 +1,14 @@
 <?php
 $GLOBALS["SQL_DEBUG"]="";
 
-$db = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die("Подключение к базе данных не состоялось!"); 
+$db = mysql_connect(DB_HOST, DB_USER, DB_PASS) or die("Подключение к базе данных не состоялось!"); 
 //var_dump($db);
-//mysql_select_db(DB_NAME,$db);
+mysql_select_db(DB_NAME,$db);
 //mysql_query("SET NAMES latin1");
 mysql_query("SET NAMES utf8");
 
-class mysql{
+class mysql
+{
 
 	var $table;
     var $prefix="";
@@ -130,24 +131,28 @@ class mysql{
     function insertSQL ($arr_value, $table)
 	{ 
 		$table = $this->prefix.$table;
-		if (!is_array ($arr_value)) $this->put_error ("Â ìåòîä insertSQL(".$table.") ïåðåäàí ÍÅ ìàññèâ");
 		
-		$field = ""; $var_field = "";
-		foreach ($arr_value as $key=>$val)
-		{
+        if(!is_array ($arr_value)){
+            $this->put_error ("В метод insertSQL(".$table.") передан НЕ массив");
+        } 
+		
+		$field = ""; 
+        $var_field = "";
+		foreach ($arr_value as $key=>$val){
 			$field .= "`$key`, ";
 			$var_field .= "'$val', ";
 		}
-
 		$field = substr_replace($field, "", -2, 1);
 		$var_field = substr_replace($var_field, "", -2, 1);
+
 		$q = "INSERT INTO $table ($field) VALUES ($var_field)";
-		$GLOBALS["SQL_DEBUG"].=$q."<br />";
+		//$GLOBALS["SQL_DEBUG"].=$q."<br />";
         Auth::userDo($q);  // Запись того, что юзер делает
         //print $q;
-		if (!mysql_query ($q)) $this->sql_error ("Error ".$q." in insertSQL(".$table.")!");
-		else
-		{
+		if (!mysql_query ($q)){
+            $this->sql_error ("Error ".$q." in insertSQL(".$table.")!");
+        } 
+		else{
 			$id = mysql_insert_id();
 			return $id;
 		}

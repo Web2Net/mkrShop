@@ -395,7 +395,7 @@ elseif($_SESSION['lang']=="ru"){
 SYS::varDump($data_valut_nby,__FILE__,__LINE__,"Курс НБУ");
         
         $value = round($data_valut_nby[0]['rate'], 2); // Округление до сотых
-        mandatoryShopSetting::insertTodayKyrsValut($valuta, $value);
+        mandatoryShopSetting::insertTodayKyrsValut($valuta, $value); // Запись курса $valuta за текущюю дату
 
         return $value;
     }
@@ -407,33 +407,35 @@ SYS::varDump($data_valut_nby,__FILE__,__LINE__,"Курс НБУ ПриватБа
         //return $data_valut_nby[0]['rate'];
     }
 
-    static function insertTodayKyrsValut($valuta, $value){
-        $date_today = date("Y-m-d");
+    static function insertTodayKyrsValut($valuta, $value){ // Запись курса $valuta за текущюю дату
+        $date_today = date("d-m-Y");
         
-        $query = "SELECT * FROM `kyrs_valut` WHERE `caption` = '$valuta' && `date_` = '$date_today' LIMIT 1 ";
-        $res = mysql_query($query);
-        Mysql::queryError($res,$query);
-        $count = mysql_num_rows($res);
+        // Преверяем существование записи для $valuta за текущую дату
+        $count = mysql::countRowsInTable("kyrs_valut", "`caption` = '$valuta' && `date_` = '$date_today' LIMIT 1");
 
-SYS::varDump($count,__FILE__,__LINE__,"FFF");       
-        if($count == 0){
-            $query = "INSERT INTO kyrs_valut(caption, date_, nby) VALUES ('$valuta', '$date_today', '$value')";
-            $res = mysql_query($query);
-            Mysql::queryError($res,$query);
+        if($count == 0){ //Если запись отсутсвует, то пишем..
+            $table = "kyrs_valut";
+            $arr_value["caption"] = $valuta;
+            $arr_value["date_"] = $date_today;
+            $arr_value["nby"] = $value;
+
+            $db = new mysql;
+	        $id = $db->insertSQL ($arr_value, $table);
         }
         
     }
 
-    static function getKyrsValutLastPeriod($valuta, $period){
-            $select = "";
-            $from = 'kyrs_valut';
-            $where = "`caption` = '$valuta'";
-            $sortby = "";
+    static function getKyrsValutLastPeriod($valuta, $period){ // Вывод списка курса валюты ($valuta) за последние $period дней 
+        $select = "";
+        $from = 'kyrs_valut';
+        $where = "`caption` = '$valuta'";
+        $sortby = "`id` DESC";
+        $limit = $period;
 
-            $db = new mysql;
-            $row = $db->origSelectSQL($select, $from, $where, $sortby, $period);
-    SYS::varDump($row,__FILE__,__LINE__,"gdgdgd");
-            return $row;
+        $db = new mysql;
+        $row = $db->origSelectSQL($select, $from, $where, $sortby, $limit);
+//SYS::varDump($row,__FILE__,__LINE__,"gdgdgd");
+        return $row;
     }
 
 

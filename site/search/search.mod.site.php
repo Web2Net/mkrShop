@@ -129,7 +129,7 @@ define('SEARCH_ART_TABLE_LANG','art_item_'.$_SESSION['lang']);
 */        
 
         $query = "SELECT * FROM ".SEARCH_ITEM_TABLE." 
-                  WHERE `flagman`='1' AND `showing`='1' AND `nalichie`='+' AND (`article` LIKE '%{$rub}%' OR `caption` LIKE '%{$rub}%' OR `desc_full` LIKE '%{$rub}%' OR `desc_short` LIKE '%{$rub}%' OR `meta_k` LIKE '%{$rub}%')";
+                  WHERE `flagman`='1' AND `showing`='1' AND `nalichie`<>'arch' AND (`article` LIKE '%{$rub}%' OR `caption` LIKE '%{$rub}%' OR `desc_full` LIKE '%{$rub}%' OR `desc_short` LIKE '%{$rub}%' OR `meta_k` LIKE '%{$rub}%')";
         
         
         $res = mysql_query($query);
